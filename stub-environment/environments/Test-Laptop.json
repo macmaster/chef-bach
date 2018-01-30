@@ -81,6 +81,14 @@
             "yarn.client.failover-sleep-base-ms": 30000
           }
         },
+        "hbase" : {
+          "superusers": [
+            "hbase"
+          ],
+          "site_xml": {
+            "hbase.backup.enable": true
+          }
+        },
         "hdfs" : {
           "dfs_replication_factor" : 1
         },
