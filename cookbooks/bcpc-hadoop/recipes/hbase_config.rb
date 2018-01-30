@@ -76,6 +76,20 @@ if node.roles.include? 'BCPC-Hadoop-Head-HBase' then
 end
 
 #
+# Initialize hbase-site list properties
+#
+list_properties = [
+  'hbase.coprocessor.region.classes',
+  'hbase.coprocessor.regionserver.classes',
+  'hbase.coprocessor.master.classes',
+  'hbase.master.logcleaner.plugins',
+  'hbase.master.hfilecleaner.plugins',
+  'hbase.procedure.master.classes',
+  'hbase.procedure.regionserver.classes'
+]
+list_properties.each { |prop| generated_values[prop] = [] }
+
+#
 # Any hbase-site.xml property related to Kerberos need to go here
 #
 if node[:bcpc][:hadoop][:kerberos][:enable] == true then
@@ -166,6 +180,23 @@ if node['bcpc']['hadoop']['hbase']['site_xml']['hbase.region.replica.replication
   generated_values['hbase.client.primaryCallTimeout.get'] = node["bcpc"]["hadoop"]["hbase"]["client"]["primarycalltimeout"]["get"]
   generated_values['hbase.client.primaryCallTimeout.multiget'] = node["bcpc"]["hadoop"]["hbase"]["client"]["primarycalltimeout"]["multiget"]
 end
+
+#
+# if HBASE backup is enabled the properties from this section will be included in hbase-site.xml
+#
+if node['bcpc']['hadoop']['hbase']['site_xml']['hbase.backup.enable'] then
+  generated_values['hbase.coprocessor.region.classes'] << 'org.apache.hadoop.hbase.backup.BackupObserver'
+  generated_values['hbase.master.logcleaner.plugins'] << 'org.apache.hadoop.hbase.backup.master.BackupLogCleaner'
+  generated_values['hbase.master.hfilecleaner.plugins'] << 'org.apache.hadoop.hbase.backup.BackupHFileCleaner'
+  generated_values['hbase.procedure.master.classes'] << 'org.apache.hadoop.hbase.backup.master.LogRollMasterProcedureManager'
+  generated_values['hbase.procedure.regionserver.classes'] << 'org.apache.hadoop.hbase.backup.regionserver.LogRollRegionServerProcedureManager'
+end
+
+#
+# Consolidate hbase-site.xml list properties
+#
+generated_values.delete_if { |k, v| v.empty? }
+list_properties.each { |prop| generated_values[prop] = generated_values[prop].join(",") }
 
 site_xml = node[:bcpc][:hadoop][:hbase][:site_xml]
 complete_hbase_site_hash = generated_values.merge(site_xml)
