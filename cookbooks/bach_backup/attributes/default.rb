@@ -17,7 +17,17 @@
 # limitations under the License.
 #
 
+# global backup attributes
+default[:bach][:backup][:root] = "/group"
+
+## hdfs backups
 default[:bach][:backup][:hdfs][:enabled] = false
+
+# storage cluster
+default[:bach][:backup][:hdfs][:namenode] = node[:bcpc][:hadoop][:hdfs_url]
+default[:bach][:backup][:hdfs][:root] = "#{node[:bach][:backup][:root]}/hdfs"
+
+# hdfs backup groups
 default[:bach][:backup][:hdfs][:groups] = %w(
 	price_history
 	equities
@@ -26,10 +36,20 @@ default[:bach][:backup][:hdfs][:groups] = %w(
 	security
 )
 
-default[:bach][:backup][:hdfs][:src][:namenode] = "hdfs://Test-Laptop"
-default[:bach][:backup][:hdfs][:src][:backup_root] = "/backup/hdfs"
 
-default[:bach][:backup][:hdfs][:dest][:namenode] = "hdfs://Test-Laptop"
-default[:bach][:backup][:hdfs][:dest][:backup_root] = "/backup/hdfs"
+## hbase backups
+default[:bach][:backup][:hbase][:enabled] = false
 
-default[:bach][:backup][:hdfs][:jobtracker] = default[:bach][:backup][:hdfs][:src][:namenode]
+# storage cluster
+default[:bach][:backup][:hbase][:namenode] = node[:bcpc][:hadoop][:hdfs_url]
+default[:bach][:backup][:hbase][:root] = "#{node[:bach][:backup][:root]}/hbase"
+
+# hbase backup groups
+default[:bach][:backup][:hbase][:groups] = %w(
+  hadoop
+  mapred
+  storm
+  phoenix
+  oozie
+)
+

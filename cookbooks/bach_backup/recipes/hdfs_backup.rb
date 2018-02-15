@@ -17,24 +17,35 @@
 # limitations under the License.
 #
 
-# create the hdfs backup root
-directory "#{ENV['HOME']}/backup/hdfs" do
-	owner 'rmacmaster'
-	group 'rmacmaster'
-	mode 0o0755
-  recursive true
-	action :create
+Chef::Resource::RubyBlock.send(:include, Bcpc_Hadoop::Helper)
+
+# create the hdfs backup root (drwxr-xr-x)
+ruby_block "create_hdfs_backup_root" do
+  block do
+    new_dir_creation(
+      node[:bach][:backup][:hdfs][:namenode], 
+      node[:bach][:backup][:hdfs][:root],
+      "hdfs:hdfs", 
+      "0755", 
+      node.run_context
+    )
+  end
+  action :run
 end
 
-puts "hdfs backup groups:"
-puts node['bach']['backup']['hdfs']['groups'].inspect
-node['bach']['backup']['hdfs']['groups'].each do |group|
-	directory "#{ENV['HOME']}/backup/hdfs/#{group}" do
-		owner 'rmacmaster'
-		group 'rmacmaster'
-		mode 0o0775
-		recursive true
-		action [:delete, :create]
-	end
+# create the team backup dirs (hdfs:#{group} drwxrwx---)
+ruby_block "create_hdfs_backup_groups" do
+  block do
+    node['bach']['backup']['hdfs']['groups'].each do |group|
+      new_dir_creation(
+        node[:bach][:backup][:hdfs][:namenode], 
+        "#{node[:bach][:backup][:hdfs][:root]}/#{group}",
+        "hdfs:#{group}", 
+        "0770", 
+        node.run_context
+      )
+    end
+  end
+  action :run
 end
 
