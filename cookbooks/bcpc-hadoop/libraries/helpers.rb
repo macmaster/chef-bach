@@ -49,9 +49,9 @@ module Bcpc_Hadoop # TODO: CamelCase this name to make rubocop happy
     #
     def new_dir_creation(hdfs, path, user, perms, run_context)
       Chef::Log.info("HDFS dir #{path} creation")
-      puts "HDFS dir #{hdfs}/#{path} #{user} #{perms} creation"
       hdfs_mkdir_cmds = "sudo -u hdfs hdfs dfs -mkdir -p #{hdfs}/#{path} && " \
-                        "sudo -u hdfs hdfs dfs -chown #{user} #{hdfs}/#{path}"
+                        "sudo -u hdfs hdfs dfs -chown #{user} #{hdfs}/#{path} && " \
+                        "sudo -u hdfs hdfs dfs -chmod #{perms} #{hdfs}/#{path} "
       so = Mixlib::ShellOut.new(hdfs_mkdir_cmds, timeout: 90)
       so.run_command
       so.error!
