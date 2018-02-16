@@ -18,38 +18,18 @@
 #
 
 # print node information
-puts "operating system: #{node['platform']} #{node['platform_version']}"
-puts "ip address: #{node['ipaddress']}"
-puts "mac address: #{node['macaddress']}"
-puts "fqdn: #{node['fqdn']}"
-puts node['recipes']
-puts node['lsb']
+puts "operating system: #{node[:platform]} #{node['platform_version']}"
+puts "ip address: #{node[:ipaddress]}"
+puts "mac address: #{node[:macaddress]}"
+puts "fqdn: #{node[:fqdn]}"
 
 # hdfs clusters
-puts "local hdfs: #{node[:bcpc][:hadoop][:hdfs_url]}"
-puts "storage hdfs: #{node[:bach][:backup][:hdfs][:namenode]}"
-puts "storage hbase: #{node[:bach][:backup][:hbase][:namenode]}"
+puts "storage hdfs: #{node[:backup][:namenode]}"
 
 # print hdfs backup groups
 puts "hdfs backup groups:"
-puts node['bach']['backup']['hdfs']['groups'].inspect
+puts node[:backup][:hdfs][:groups].inspect
 
 # print hbase backup groups
 puts "hbase backup groups:"
-puts node['bach']['backup']['hbase']['groups'].inspect
-
-# create the backup root (drwxrwxrwt)
-Chef::Resource::RubyBlock.send(:include, Bcpc_Hadoop::Helper)
-ruby_block "create_backup_root" do
-  block do
-    new_dir_creation(
-      node[:bach][:backup][:hdfs][:namenode], 
-      node[:bach][:backup][:root],
-      "hdfs:hdfs", 
-      "1777", 
-      node.run_context
-    )
-  end
-  action :run
-end
-
+puts node[:backup][:hbase][:groups].inspect
