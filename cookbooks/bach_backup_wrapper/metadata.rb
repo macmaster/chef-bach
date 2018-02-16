@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: bach_backup
-# Recipe:: default
+# Cookbook Name:: bach_backup_wrapper
+# metadata.rb
 #
 # Copyright 2018, Bloomberg Finance L.P.
 #
@@ -17,19 +17,11 @@
 # limitations under the License.
 #
 
-# print node information
-puts "operating system: #{node[:platform]} #{node['platform_version']}"
-puts "ip address: #{node[:ipaddress]}"
-puts "mac address: #{node[:macaddress]}"
-puts "fqdn: #{node[:fqdn]}"
-
-# hdfs clusters
-puts "storage hdfs: #{node[:backup][:namenode]}"
-
-# print hdfs backup groups
-puts "hdfs backup groups:"
-puts node[:backup][:hdfs][:groups].inspect
-
-# print hbase backup groups
-puts "hbase backup groups:"
-puts node[:backup][:hbase][:groups].inspect
+# encoding: utf-8
+name 'bach_backup_wrapper'
+maintainer 'Bloomberg Finance L.P.'
+maintainer_email 'hadoop@bloomberg.net'
+description 'Overrides the default attributes in the backup "library cookbook".'
+license 'Apache 2.0'
+long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
+version '0.1.0'

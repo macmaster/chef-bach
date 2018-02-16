@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: bach_backup
+# Cookbook Name:: backup
 # custom hdfs file resource
 #
 # Copyright 2018, Bloomberg Finance L.P.

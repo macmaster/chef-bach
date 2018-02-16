@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: bach_backup
+# Cookbook Name:: backup
 # Recipe:: hdfs_directories
 # Creates the HDFS backup storage directories
 #

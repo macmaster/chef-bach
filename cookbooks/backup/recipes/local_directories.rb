@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: bach_backup
+# Cookbook Name:: backup
 # Recipe:: local_directories
 # Creates the local backup configuration directories
 #

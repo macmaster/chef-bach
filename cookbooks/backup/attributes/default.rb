@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: bach_backup
+# Cookbook Name:: backup
 # Default Attributes
 #
 # Copyright 2018, Bloomberg Finance L.P.
@@ -17,14 +17,14 @@
 # limitations under the License.
 #
 
-# global backup root
+## global backup properties
+default[:backup][:user] = "hdfs"
 default[:backup][:root] = "/group"
 default[:backup][:local][:root] = "/etc/backup"
 
 # storage cluster
-default[:backup][:namenode] = "hdfs://Test-Laptop" # node[:bcpc][:hadoop][:hdfs_url]
-default[:backup][:jobtracker] = "f-bcpc-vm2.bcpc.example.com:8032" # node[:bcpc]...
-default[:backup][:user] = "hdfs"
+default[:backup][:namenode] = "hdfs://localhost:9000" 
+default[:backup][:jobtracker] = "localhost:8032" 
 
 
 ## hdfs backups
@@ -33,25 +33,8 @@ default[:backup][:hdfs][:root] = "#{node[:backup][:root]}/hdfs"
 default[:backup][:hdfs][:local][:root] = "#{node[:backup][:local][:root]}/hdfs"
 
 # hdfs backup requests
-default[:backup][:hdfs][:jobs] = {
-  price_history: {
-    hdfs: "hdfs://Test-Laptop",
-    start: "2018-02-16T08:00Z",
-    end: "2018-02-26T08:00Z",
-    jobs: [
-      { path: "/tmp/backup", period: 120 },
-      { path: "/tmp/garbage", period: 360 }
-    ]
-  },
-  equities: {
-    hdfs: "hdfs://Test-Laptop",
-    start: "2018-02-16T08:00Z",
-    end: "2018-02-26T08:00Z",
-    jobs: [
-      { path: "/tmp/overdose.csv", period: 480 }
-    ]
-  },
-}
+## NOTE: refer to doc/hdfs_backup.json for proper data scheme.
+default[:backup][:hdfs][:jobs] = {}
 
 # hdfs backup groups
 default[:backup][:hdfs][:user] = "hdfs"
@@ -68,8 +51,12 @@ default[:backup][:hbase][:root] = "#{node[:backup][:root]}/hbase"
 default[:backup][:hbase][:local][:root] = "#{node[:backup][:local][:root]}/hbase"
 
 # hbase backup requests
+## NOTE: refer to doc/hbase_backup.json for proper data scheme.
 default[:backup][:hbase][:jobs] = {}
 
 # hbase backup groups
 default[:backup][:hbase][:user] = "hbase"
 default[:backup][:hbase][:groups] = node[:backup][:hbase][:jobs].keys
+
+
+## FUTURE: Hive and Phoenix backups
