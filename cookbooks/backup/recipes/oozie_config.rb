@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: bach_backup
+# Cookbook Name:: backup
 # Recipe:: oozie_config
 # Sources and uploads the oozie job configuration for each group
 #
