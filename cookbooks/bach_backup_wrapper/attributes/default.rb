@@ -23,8 +23,9 @@ force_default[:backup][:root] = "/archive"
 force_default[:backup][:local][:root] = "/etc/archive"
 
 # storage cluster
-default[:backup][:namenode] = "hdfs://Test-Laptop" # node[:bcpc][:hadoop][:hdfs_url]
-default[:backup][:jobtracker] = "f-bcpc-vm2.bcpc.example.com:8032" # node[:bcpc]...
+force_default[:backup][:namenode] = "hdfs://Test-Laptop" # node[:bcpc][:hadoop][:hdfs_url]
+force_default[:backup][:jobtracker] = "f-bcpc-vm2.bcpc.example.com:8032" # node[:bcpc]...
+force_default[:backup][:oozie] = "http://f-bcpc-vm2.bcpc.example.com:11000/oozie"
 
 
 # hdfs backup jobs list
@@ -36,7 +37,7 @@ force_default[:backup][:hdfs][:jobs] = {
     start: "2018-02-16T08:00Z",
     end: "2018-02-26T08:00Z",
     jobs: [
-      { path: "/tmp/backup", period: 120 },
+      # { path: "/tmp/backup", period: 120 },
       { path: "/tmp/garbage", period: 360 }
     ]
   },
@@ -45,7 +46,7 @@ force_default[:backup][:hdfs][:jobs] = {
     start: "2018-02-16T08:00Z",
     end: "2018-02-26T08:00Z",
     jobs: [
-      { path: "/tmp/overdose.csv", period: 480 },
+      # { path: "/tmp/overdose.csv", period: 480 },
       { path: "/app", period: 480 }
     ]
   },

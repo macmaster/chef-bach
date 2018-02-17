@@ -36,7 +36,7 @@ hdfs.src.namenode=<%= @hdfs %>
 
 # storage cluster
 hdfs.dest.namenode=<%= node[:backup][:namenode] %>
-hdfs.backup.root=${hdfs.dest.namenode}/<%= node[:backup][:hdfs][:root] %>
+hdfs.backup.root=${hdfs.dest.namenode}/<%= node[:backup][:hdfs][:root].sub("/", "") %>
 
 # team properties
 team.backup.coordinator=${hdfs.backup.root}/${teamname}/.oozie/coordinator-<%= @jobname %>.xml
