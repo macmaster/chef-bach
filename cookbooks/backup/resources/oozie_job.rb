@@ -35,7 +35,7 @@ action :run do
   client = Oozie::Client.new(URI(url).host, URI(url).port, user)
 
   # check if the job is already running
-  job_id = client.get_id(name, 'coordinator', 'RUNNING') 
+  job_id = client.get_id(name, 'coordinator', 'RUNNING')
 
   # start the service
   if job_id.nil?
@@ -49,7 +49,7 @@ action :restart do
   client = Oozie::Client.new(URI(url).host, URI(url).port, user)
 
   # check if the job is already running
-  job_id = client.get_id(name, 'coordinator', 'RUNNING') 
+  job_id = client.get_id(name, 'coordinator', 'RUNNING')
 
   if job_id.nil?
     # start the service
@@ -69,7 +69,7 @@ action :kill do
   client = Oozie::Client.new(URI(url).host, URI(url).port, user)
 
   # kill the service (if it exists)
-  jobs_cmd = client.kill_jobs({ name: name }, "coordinator") 
+  jobs_cmd = client.kill_jobs({ name: name }, "coordinator")
   jobs_cmd.error!
 end
 

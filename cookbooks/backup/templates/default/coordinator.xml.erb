@@ -18,10 +18,10 @@ limitations under the License.
 -->
 
 <coordinator-app name="backup.hdfs.${teamname}.<%= @jobname %>"
-  start="${coord:conf('team.backup.start')}" 
-  end="${coord:conf('team.backup.end')}" 
-  timezone="America/New_York" 
-  frequency="${coord:minutes(<%= @period %>)}" 
+  start="${coord:conf('team.backup.start')}"
+  end="${coord:conf('team.backup.end')}"
+  timezone="America/New_York"
+  frequency="${coord:minutes(<%= @period %>)}"
   xmlns="uri:oozie:coordinator:0.1">
 
   <controls>

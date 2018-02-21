@@ -23,8 +23,8 @@ default[:backup][:root] = "/backup"
 default[:backup][:local][:root] = "/etc/backup"
 
 # storage cluster
-default[:backup][:namenode] = "hdfs://localhost:9000" 
-default[:backup][:jobtracker] = "localhost:8032" 
+default[:backup][:namenode] = "hdfs://localhost:9000"
+default[:backup][:jobtracker] = "localhost:8032"
 default[:backup][:oozie] = "http://localhost:11000/oozie"
 
 

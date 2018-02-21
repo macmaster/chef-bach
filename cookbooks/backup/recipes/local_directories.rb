@@ -71,7 +71,7 @@ if node[:backup][:hdfs][:enabled]
   create_local_group_dirs(
     node[:backup][:hdfs][:groups],
     node[:backup][:hdfs][:local][:root],
-    node[:backup][:user], 
+    node[:backup][:user],
     "0755"
   )
 end

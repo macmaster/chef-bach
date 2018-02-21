@@ -97,7 +97,7 @@ module Oozie
       filter.map { |key, value| "#{key.to_s}=#{value}" }.join(';')
     end
   end
-  
+
   class Client < ClientV1
   end
 end
