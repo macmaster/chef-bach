@@ -1,6 +1,6 @@
 #
 # oozie_client.rb
-# custom ruby client for oozie
+# ruby client for oozie
 #
 # Copyright 2018, Bloomberg Finance L.P.
 #
@@ -32,24 +32,69 @@ module Oozie
       @oozie = "http://#{host}:#{port}/oozie"
     end
 
-    def jobs(filter={}, jobtype="workflow", len=10, kill=false)
-      filter = filter.map { |key, value| "#{key.to_s}=#{value}" }.join(";")
-      options = "-oozie #{@oozie} -jobtype #{jobtype} -len #{len} -filter=\"#{filter}\""
-      options += " -kill" if kill
-      jobs_cmd = "sudo -u #{@user} oozie jobs #{options}"
-      puts jobs_cmd
-      return self.execute(jobs_cmd)
+    def jobs(filter={}, jobtype='workflow', len=10)
+      execute('jobs', user, {
+        oozie: @oozie,
+        jobtype: jobtype,
+        filter: "\"#{filter_string(filter)}\"",
+        len: len
+      })
+    end
+
+    def kill_jobs(filter={}, jobtype='workflow', len=1000)
+      execute('jobs', user, {
+        oozie: @oozie,
+        jobtype: jobtype,
+        filter: "\"#{filter_string(filter)}\"",
+        len: len,
+        kill: nil
+      })
     end
 
     def run(config, user=@user)
-      job_cmd = "sudo -u #{user} oozie job -oozie #{@oozie} -config #{config} -run"
-      puts job_cmd
-      return self.execute(job_cmd)
+      execute('job', user, {
+        oozie: @oozie,
+        config: config,
+        run: nil
+      })
     end
 
-    def execute(command)
+    def rerun(action_id, config, user=@user)
+      execute('job', user, {
+        oozie: @oozie,
+        config: config,
+        rerun: action_id
+      })
+    end
+
+    def kill(job_id, user=@user)
+      execute('job', user, {
+        oozie: @oozie,
+        kill: job_id
+      })
+    end
+
+    def get_id(job_name, jobtype='workflow', status='RUNNING')
+      jobs_cmd = jobs({ name: job_name, status: status }, 'coordinator', 1)
+      match = jobs_cmd.stdout.match(/(\S+)\s+#{job_name}/)
+      return match.nil? ? nil : match[1]
+    end
+
+    private ## private methods
+
+    def execute(subcommand, user=@user, options={})
       require 'mixlib/shellout'
+      command = "sudo -u #{user} oozie #{subcommand} #{options_string(options)}"
+      # puts command ## print debug command
       return Mixlib::ShellOut.new(command, timeout: 90).run_command
+    end
+
+    def options_string(options)
+      options.map { |key, value| "-#{key.to_s} #{value}" }.join(' ')
+    end
+
+    def filter_string(filter)
+      filter.map { |key, value| "#{key.to_s}=#{value}" }.join(';')
     end
   end
   

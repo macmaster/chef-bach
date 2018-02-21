@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: backup
-# custom hdfs file resource
+# Custom hdfs file resource
 #
 # Copyright 2018, Bloomberg Finance L.P.
 #

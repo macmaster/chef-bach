@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: backup
-# custom oozie job resource
+# Custom oozie job resource
 #
 # Copyright 2018, Bloomberg Finance L.P.
 #
@@ -35,12 +35,32 @@ action :run do
   client = Oozie::Client.new(URI(url).host, URI(url).port, user)
 
   # check if the job is already running
-  jobs_cmd = client.jobs({ name: name, status: "RUNNING" }, "coordinator", 1) 
+  job_id = client.get_id(name, 'coordinator', 'RUNNING') 
 
   # start the service
-  if jobs_cmd.stdout.match(/(\S+)\s+#{name}/).nil?
+  if job_id.nil?
     run_cmd = client.run(config, user)
     run_cmd.error!
+  end
+end
+
+action :restart do
+  Chef::Log.info("Rerunning oozie job: #{name}")
+  client = Oozie::Client.new(URI(url).host, URI(url).port, user)
+
+  # check if the job is already running
+  job_id = client.get_id(name, 'coordinator', 'RUNNING') 
+
+  if job_id.nil?
+    # start the service
+    run_cmd = client.run(config, user)
+    run_cmd.error!
+  else
+    # kill and restart the service
+    kill_cmd = client.kill(job_id, user)
+    kill_cmd.error!
+    rerun_cmd = client.run(config, user)
+    rerun_cmd.error!
   end
 end
 
@@ -49,7 +69,7 @@ action :kill do
   client = Oozie::Client.new(URI(url).host, URI(url).port, user)
 
   # kill the service (if it exists)
-  jobs_cmd = client.jobs({ name: name }, "coordinator", 100, true) 
+  jobs_cmd = client.kill_jobs({ name: name }, "coordinator") 
   jobs_cmd.error!
 end
 
