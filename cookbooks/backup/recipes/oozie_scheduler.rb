@@ -32,6 +32,7 @@ node[:backup][:hdfs][:jobs].each do |group, backup|
         user node[:backup][:hdfs][:user]
         action :run
       end
+
     end
   end
 end
