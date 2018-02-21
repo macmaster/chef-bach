@@ -6,7 +6,8 @@ metadata
 #
 # Local cookbooks, inside our repository.
 #
-cookbook 'bach_backup', path: './cookbooks/bach_backup'
+cookbook 'bach_backup_wrapper', path: './cookbooks/bach_backup_wrapper'
+cookbook 'backup', path: './cookbooks/backup'
 cookbook 'bach_common', path: './cookbooks/bach_common'
 cookbook 'bach_krb5', path: './cookbooks/bach_krb5'
 cookbook 'bach_repository', path: './cookbooks/bach_repository'

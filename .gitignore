@@ -12,7 +12,8 @@ python_server.log
 vbox/**
 bins/
 cookbooks/*/
-!cookbooks/bach_backup
+!cookbooks/backup
+!cookbooks/bach_backup_wrapper
 !cookbooks/bach_common
 !cookbooks/bach_repository
 !cookbooks/bach_spark
