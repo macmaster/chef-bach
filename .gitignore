@@ -12,11 +12,11 @@ python_server.log
 vbox/**
 bins/
 cookbooks/*/
-!cookbooks/backup
-!cookbooks/bach_backup_wrapper
+!cookbooks/bach_backup
 !cookbooks/bach_common
 !cookbooks/bach_repository
 !cookbooks/bach_spark
+!cookbooks/backup
 !cookbooks/bcpc
 !cookbooks/bcpc-hadoop
 !cookbooks/bcpc_jmxtrans
