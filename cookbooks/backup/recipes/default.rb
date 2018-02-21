@@ -16,20 +16,3 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-# print node information
-puts "operating system: #{node[:platform]} #{node['platform_version']}"
-puts "ip address: #{node[:ipaddress]}"
-puts "mac address: #{node[:macaddress]}"
-puts "fqdn: #{node[:fqdn]}"
-
-# hdfs clusters
-puts "storage hdfs: #{node[:backup][:namenode]}"
-
-# print hdfs backup groups
-puts "hdfs backup groups:"
-puts node[:backup][:hdfs][:groups].inspect
-
-# print hbase backup groups
-puts "hbase backup groups:"
-puts node[:backup][:hbase][:groups].inspect

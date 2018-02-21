@@ -45,11 +45,12 @@ action :run do
 end
 
 action :kill do
+  Chef::Log.info("Killing oozie job: #{name}")
+  client = Oozie::Client.new(URI(url).host, URI(url).port, user)
+
   # kill the service (if it exists)
-  ## TODO: check if the service exists. set -kill's optionarg to job_id
-  jobs_cmd = client.jobs({ name: name, status: "RUNNING" }, "coordinator", 10, true) 
-  puts jobs_cmd.stdout
-  puts jobs_cmd.exitstatus
+  jobs_cmd = client.jobs({ name: name }, "coordinator", 100, true) 
+  jobs_cmd.error!
 end
 
 action :nothing do
