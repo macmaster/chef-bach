@@ -1,4 +1,6 @@
-Cookbook to setup the BACH HDFS Backup Service
+# backup
 
-The backup service regularly schedules HDFS backup jobs on a backup cluster.
+`backup` is a chef cookbook to setup periodic HDFS inter-cluster backups.
+
+The backup service regularly schedules HDFS distcp actions from source to backup cluster.
 Distcps are run periodically using oozie coordinators and workflows.

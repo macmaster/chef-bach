@@ -19,7 +19,7 @@
 
 ## global backup properties
 default[:backup][:user] = "hdfs"
-default[:backup][:root] = "/group"
+default[:backup][:root] = "/backup"
 default[:backup][:local][:root] = "/etc/backup"
 
 # storage cluster
