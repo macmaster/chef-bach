@@ -27,6 +27,9 @@ hdfs_directory "#{node[:backup][:root]}" do
   mode "1777"
 end
 
+# group backup dir structure:
+# #{path}/#{group}/
+# #{path}/#{group}/.oozie
 def create_hdfs_group_dirs(groups, hdfs, path, owner, mode) 
   groups.map do |group|
     # group directory
@@ -68,27 +71,6 @@ if node[:backup][:hdfs][:enabled]
     node[:backup][:namenode], 
     node[:backup][:hdfs][:root],
     node[:backup][:hdfs][:user], 
-    "0770", 
-  )
-end
-
-if node[:backup][:hbase][:enabled]
-  # create the hbase backup root (drwxr-xr-x)
-  hdfs_directory "#{node[:backup][:hbase][:root]}" do
-    hdfs node[:backup][:namenode]
-    path node[:backup][:hbase][:root]
-    owner node[:backup][:hbase][:user]
-    group node[:backup][:hbase][:user]
-    mode "0755"
-    action :create
-  end
-
-  # create the team backup dirs (hbase:#{group} drwxrwx---)
-  create_hdfs_group_dirs(
-    node[:backup][:hbase][:groups],
-    node[:backup][:namenode], 
-    node[:backup][:hbase][:root],
-    node[:backup][:hbase][:user], 
     "0770", 
   )
 end

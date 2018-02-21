@@ -28,7 +28,7 @@ directory "#{node[:backup][:local][:root]}" do
 end
 
 def create_local_group_dirs(groups, path, user, mode)
-  threads = groups.map do |group|
+  groups.map do |group|
     # local oozie metadata
     directory "#{path}/#{group}" do
       owner "#{user}"
@@ -39,6 +39,7 @@ def create_local_group_dirs(groups, path, user, mode)
   end
 end
 
+# removes all directories in #{path} not included in the #{filter} array.
 def clean_local_group_dirs(filter, path)
   group_dirs = Dir.glob("#{path}/*").select { |entry| File.directory? entry }
   group_dirs.each do |dir|
@@ -66,34 +67,10 @@ if node[:backup][:hdfs][:enabled]
     node[:backup][:hdfs][:local][:root]
   )
 
-  # create the local team backup conf dirs (/etc/backup)
+  # create the local team backup conf dirs (drwxr-xr-x)
   create_local_group_dirs(
     node[:backup][:hdfs][:groups],
     node[:backup][:hdfs][:local][:root],
-    node[:backup][:user], 
-    "0755"
-  )
-end
-
-if node[:backup][:hbase][:enabled]
-  # create the hbase backup root (drwxr-xr-x)
-  directory "#{node[:backup][:hbase][:local][:root]}" do
-    owner node[:backup][:user]
-    group node[:backup][:user]
-    mode "0755"
-    action :create
-  end
-  
-  # clean the stale team conf dirs
-  clean_local_group_dirs(
-    node[:backup][:hbase][:groups],
-    node[:backup][:hbase][:local][:root]
-  )
-
-  # create the local team backup conf dirs (/etc/backup)
-  create_local_group_dirs(
-    node[:backup][:hbase][:groups],
-    node[:backup][:hbase][:local][:root],
     node[:backup][:user], 
     "0755"
   )

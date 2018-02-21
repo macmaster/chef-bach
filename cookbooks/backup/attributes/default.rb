@@ -41,23 +41,12 @@ default[:backup][:hdfs][:jobs] = {}
 default[:backup][:hdfs][:user] = "hdfs"
 default[:backup][:hdfs][:groups] = node[:backup][:hdfs][:jobs].keys
 
-# hdfs backup tuning parameters
-default[:backup][:hdfs][:timeout] = -1 # timeout in minutes before aborting distcp request
-default[:backup][:hdfs][:mapper][:bandwidth] = 25 # bandlimit in MB/s per mapper
+## hdfs backup tuning parameters
 
+# timeout in minutes before aborting distcp request
+default[:backup][:hdfs][:timeout] = -1
 
-## hbase backups
-default[:backup][:hbase][:enabled] = true
-default[:backup][:hbase][:root] = "#{node[:backup][:root]}/hbase"
-default[:backup][:hbase][:local][:root] = "#{node[:backup][:local][:root]}/hbase"
+# bandlimit in MB/s per mapper
+default[:backup][:hdfs][:mapper][:bandwidth] = 25
 
-# hbase backup requests
-## NOTE: refer to doc/hbase_backup.json for proper data scheme.
-default[:backup][:hbase][:jobs] = {}
-
-# hbase backup groups
-default[:backup][:hbase][:user] = "hbase"
-default[:backup][:hbase][:groups] = node[:backup][:hbase][:jobs].keys
-
-
-## FUTURE: Hive and Phoenix backups
+## FUTURE: HBase, Hive, and Phoenix backups
