@@ -1,0 +1,16 @@
+{
+    "name": "Backup-Build",
+    "description": "Configures the backup service on a backup cluster leader.",
+    "chef_type": "role",
+    "json_class": "Chef::Role",
+    "run_list": [
+# "recipe[java::default]",
+# "recipe[bcpc-hadoop::maven_config]",
+# "recipe[maven::default]",
+# "recipe[hannibal::hannibal_build]"
+    ],
+    "default_attributes": {
+    },
+    "override_attributes": {
+    }
+}
