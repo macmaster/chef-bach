@@ -65,7 +65,7 @@ if node[:backup][:hdfs][:enabled]
     action :create
   end
 
-  # create the team backup dirs (hdfs:#{group} drwxrwx---)
+  # create the group backup dirs (hdfs:#{group} drwxrwx---)
   create_hdfs_group_dirs(
     node[:backup][:hdfs][:groups],
     node[:backup][:namenode],

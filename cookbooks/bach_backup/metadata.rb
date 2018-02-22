@@ -18,7 +18,7 @@
 #
 
 # encoding: utf-8
-name 'bach_backup_wrapper'
+name 'bach_backup'
 maintainer 'Bloomberg Finance L.P.'
 maintainer_email 'hadoop@bloomberg.net'
 description 'Overrides the default attributes in the backup "library cookbook".'

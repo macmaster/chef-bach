@@ -17,9 +17,6 @@
 # limitations under the License.
 #
 
-require 'net/http'
-require 'json'
-
 module Oozie
   class ClientV1
     attr_accessor :host, :port, :user

@@ -18,8 +18,8 @@
 # limitations under the License.
 #
 
-# team name [A-Za-z_]+
-teamname=<%= @group %>
+# group name [A-Za-z_]+
+group=<%= @group %>
 
 # backup file / dir
 target=<%= @path %>
@@ -38,18 +38,18 @@ hdfs.src.namenode=<%= @hdfs %>
 hdfs.dest.namenode=<%= node[:backup][:namenode] %>
 hdfs.backup.root=${hdfs.dest.namenode}/<%= node[:backup][:hdfs][:root].sub("/", "") %>
 
-# team properties
-team.backup.coordinator=${hdfs.backup.root}/${teamname}/.oozie/coordinator-<%= @jobname %>.xml
-team.backup.workflow=${hdfs.backup.root}/${teamname}/.oozie/workflow-<%= @jobname %>.xml
+# group properties
+group.backup.coordinator=${hdfs.backup.root}/${group}/.oozie/coordinator-<%= @jobname %>.xml
+group.backup.workflow=${hdfs.backup.root}/${group}/.oozie/workflow-<%= @jobname %>.xml
 
 # backup schedule (ISO date)
-team.backup.start=<%= @startdate %>
-team.backup.end=<%= @enddate %>
+group.backup.start=<%= @startdate %>
+group.backup.end=<%= @enddate %>
 
 # oozie properties
 oozie.use.system.libpath=true
-# oozie.wf.application.path=${team.backup.workflow}
-oozie.coord.application.path=${team.backup.coordinator}
+# oozie.wf.application.path=${group.backup.workflow}
+oozie.coord.application.path=${group.backup.coordinator}
 oozie.launcher.mapreduce.job.hdfs-servers=${hdfs.src.namenode},${hdfs.dest.namenode}
 
 # hadoop properties

@@ -17,7 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="backup.hdfs.${teamname}.<%= @jobname %>">
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="backup.hdfs.${group}.<%= @jobname %>">
 
   <start to="backup-<%= @jobname %>"/>
 
@@ -36,7 +36,7 @@ limitations under the License.
 
       <!-- source and destination -->
       <arg>${wf:conf("hdfs.src.namenode")}/${target}</arg>
-      <arg>${wf:conf("hdfs.backup.root")}/${teamname}/${basename}</arg>
+      <arg>${wf:conf("hdfs.backup.root")}/${group}/${basename}</arg>
     </distcp>
       <ok to="end"/>
       <error to="fail"/>

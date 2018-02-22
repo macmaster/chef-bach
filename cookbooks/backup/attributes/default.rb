@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+default[:backup][:cookbook] = 
+
 ## global backup properties
 default[:backup][:user] = "hdfs"
 default[:backup][:root] = "/backup"
@@ -34,12 +36,21 @@ default[:backup][:hdfs][:root] = "#{node[:backup][:root]}/hdfs"
 default[:backup][:hdfs][:local][:root] = "#{node[:backup][:local][:root]}/hdfs"
 
 # hdfs backup requests
-## NOTE: refer to doc/hdfs_backup.json for proper data scheme.
+## NOTE: refer to files/default/hdfs/jobs.yaml for the proper data scheme.
+## example jobs list:
+# default[:backup][:hdfs][:jobs] = YAML.load_file(File.join(
+#   Chef::Config[:file_cache_path],
+#   'cookbooks',
+#   'backup',
+#   'files/default/hdfs/jobs.yml'
+# ))
+
+# empty jobs list
 default[:backup][:hdfs][:jobs] = {}
 
 # hdfs backup groups
 default[:backup][:hdfs][:user] = "hdfs"
-default[:backup][:hdfs][:groups] = node[:backup][:hdfs][:jobs].keys
+default[:backup][:hdfs][:groups] = default[:backup][:hdfs][:jobs].keys
 
 ## hdfs backup tuning parameters
 

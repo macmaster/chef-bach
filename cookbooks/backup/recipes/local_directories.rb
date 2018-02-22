@@ -61,13 +61,13 @@ if node[:backup][:hdfs][:enabled]
     action :create
   end
 
-  # clean the stale team conf dirs
+  # clean the stale group conf dirs
   clean_local_group_dirs(
     node[:backup][:hdfs][:groups],
     node[:backup][:hdfs][:local][:root]
   )
 
-  # create the local team backup conf dirs (drwxr-xr-x)
+  # create the local group backup conf dirs (drwxr-xr-x)
   create_local_group_dirs(
     node[:backup][:hdfs][:groups],
     node[:backup][:hdfs][:local][:root],

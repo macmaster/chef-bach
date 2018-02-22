@@ -29,40 +29,12 @@ force_default[:backup][:oozie] = "http://f-bcpc-vm2.bcpc.example.com:11000/oozie
 
 
 # hdfs backup jobs list
-## NOTE: refer to doc/hdfs_backup.json for proper data scheme.
+## NOTE: refer to file/default/hdfs_jobs.yml for proper data scheme.
 ## TODO: eventually, refactor the cookbook to source these properties from a relational db (mysql)
-force_default[:backup][:hdfs][:jobs] = {
-  price_history: {
-    hdfs: "hdfs://Test-Laptop",
-    start: "2018-02-16T08:00Z",
-    end: "2018-02-26T08:00Z",
-    jobs: [
-      # { path: "/tmp/backup", period: 120 },
-      { path: "/tmp/garbage", period: 360 }
-    ]
-  },
-  equities: {
-    hdfs: "hdfs://Test-Laptop",
-    start: "2018-02-16T08:00Z",
-    end: "2018-02-26T08:00Z",
-    jobs: [
-      # { path: "/tmp/overdose.csv", period: 480 },
-      { path: "/app", period: 480 }
-    ]
-  },
-}
-
-
-# # hbase backup jobs list
-# ## NOTE: refer to doc/hbase_backup.json for proper data scheme.
-# ## TODO: eventually, refactor the cookbook to source these properties from a relational db (mysql)
-# force_default[:backup][:hbase][:jobs] = {
-#   bde: {
-#     start: "2018-02-16T08:00Z",
-#     end: "2018-02-26T08:00Z",
-#     jobs: [
-#       { table: "overdose", period: 120 },
-#       { table: "price_history", period: 360 }
-#     ]
-#   }
-# }
+force_default[:backup][:hdfs][:jobs] = YAML.load_file(File.join(
+  Chef::Config[:file_cache_path],
+  'cookbooks',
+  'bach_backup',
+  'files/default/hdfs/jobs.yml'
+))
+force_default[:backup][:hdfs][:groups] = node[:backup][:hdfs][:jobs].keys
