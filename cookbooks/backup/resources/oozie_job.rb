@@ -26,13 +26,12 @@ property :config, String, required: true
 property :user, String
 
 action_class do
-  require 'uri'
   include Oozie
 end
 
 action :run do
   Chef::Log.info("Starting oozie job: #{name}")
-  client = Oozie::Client.new(URI(url).host, URI(url).port, user)
+  client = Oozie::Client.new(url, user)
 
   # check if the job is already running
   job_id = client.get_id(name, 'coordinator', 'RUNNING')
@@ -46,7 +45,7 @@ end
 
 action :restart do
   Chef::Log.info("Rerunning oozie job: #{name}")
-  client = Oozie::Client.new(URI(url).host, URI(url).port, user)
+  client = Oozie::Client.new(url, user)
 
   # check if the job is already running
   job_id = client.get_id(name, 'coordinator', 'RUNNING')
@@ -66,7 +65,7 @@ end
 
 action :kill do
   Chef::Log.info("Killing oozie job: #{name}")
-  client = Oozie::Client.new(URI(url).host, URI(url).port, user)
+  client = Oozie::Client.new(url, user)
 
   # kill the service (if it exists)
   jobs_cmd = client.kill_jobs({ name: name }, "coordinator")

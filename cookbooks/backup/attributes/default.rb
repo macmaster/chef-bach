@@ -17,8 +17,6 @@
 # limitations under the License.
 #
 
-default[:backup][:cookbook] = 
-
 ## global backup properties
 default[:backup][:user] = "hdfs"
 default[:backup][:root] = "/backup"
