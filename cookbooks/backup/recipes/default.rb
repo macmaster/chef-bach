@@ -17,4 +17,5 @@
 # limitations under the License.
 #
 
+# Print the jobs list hash
 p node[:backup][:hdfs][:jobs]

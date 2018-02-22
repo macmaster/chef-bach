@@ -18,8 +18,8 @@
 # limitations under the License.
 #
 
-# create the local configuration root
-# holds local copies of the oozie configurations
+# Create the local configuration root
+# Holds local copies of the oozie configurations
 directory "#{node[:backup][:local][:root]}" do
   owner node[:backup][:user]
   group node[:backup][:user]

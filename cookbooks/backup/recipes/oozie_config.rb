@@ -18,6 +18,8 @@
 # limitations under the License.
 #
 
+# Create the oozie configurations for each group
+# Store them in the local backup root and upload them to HDFS
 node[:backup][:hdfs][:jobs].each do |group, backup|
   local_conf_dir = "#{node[:backup][:hdfs][:local][:root]}/#{group}"
   hdfs_conf_dir = "#{node[:backup][:hdfs][:root]}/#{group}/.oozie"

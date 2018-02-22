@@ -18,6 +18,8 @@
 # limitations under the License.
 #
 
+# Run each oozie coordinator tracked by the backup service.
+# Only runs the coordinator if it is not already RUNNING
 node[:backup][:hdfs][:jobs].each do |group, backup|
   local_conf_dir = "#{node[:backup][:hdfs][:local][:root]}/#{group}"
 
