@@ -11,7 +11,7 @@
 #       :hdfs: (OPTIONAL) override top-level hdfs uri (string)
 #       :period: period in minutes between backup actions (integer)
 ---
-:price_history:
+:hdfs:
   :hdfs: 'hdfs://Test-Laptop'
   :start: '2018-02-16T12:00Z'
   :end: '2018-02-26T06:00Z'
@@ -24,7 +24,7 @@
     - :path: '/tmp/garbage'
       :period: 240
 
-:equities:
+:mapred:
   :hdfs: 'hdfs://Test-Laptop'
   :start: '2018-02-16T08:00Z'
   :end: '2018-03-02T08:00Z'

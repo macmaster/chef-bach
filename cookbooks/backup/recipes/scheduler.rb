@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: backup
-# Recipe:: oozie_scheduler
+# Recipe:: scheduler
 # Launches the oozie coordinators to schedule periodic backups
 #
 # Copyright 2018, Bloomberg Finance L.P.
@@ -20,21 +20,27 @@
 
 # Run each oozie coordinator tracked by the backup service.
 # Only runs the coordinator if it is not already RUNNING
-node[:backup][:hdfs][:jobs].each do |group, backup|
-  local_conf_dir = "#{node[:backup][:hdfs][:local][:root]}/#{group}"
+node[:backup][:services].each do |service|
+  if node[:backup][service][:enabled]
 
-  if backup[:jobs]
-    backup[:jobs].each do |job|
-      job_name = job[:name] ? job[:name] : File.basename(job[:path])
+    node[:backup][service][:schedules].each do |group, schedule|
+      if schedule[:jobs]
 
-      # restart oozie coordinators
-      oozie_job "backup.hdfs.#{group}.#{job_name}" do
-        url node[:backup][:oozie]
-        config "#{local_conf_dir}/backup-#{job_name}.properties"
-        user node[:backup][:hdfs][:user]
-        action :run
+        schedule[:jobs].each do |job|
+          name = job[:name] ? job[:name] : File.basename(job[:path])
+          jobname = "#{group}-#{name}"
+
+          # restart oozie coordinators
+          oozie_job "backup.#{service}.#{jobname}" do
+            url node[:backup][:oozie]
+            config "#{node[:backup][service][:local][:oozie]}/#{jobname}.properties"
+            user group
+            action :run
+            ignore_failure true
+          end
+        end
+
       end
-
     end
   end
 end

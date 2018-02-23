@@ -32,6 +32,7 @@ default[:backup][:services] = [:hdfs]
 
 ## hdfs backups
 default[:backup][:hdfs][:enabled] = true
+default[:backup][:hdfs][:user] = "hdfs"
 default[:backup][:hdfs][:root] = "#{node[:backup][:root]}/hdfs"
 default[:backup][:hdfs][:local][:root] = "#{node[:backup][:local][:root]}/hdfs"
 default[:backup][:hdfs][:local][:oozie] = 
@@ -39,7 +40,7 @@ default[:backup][:hdfs][:local][:oozie] =
 
 # hdfs backup requests
 ## NOTE: refer to files/default/hdfs/jobs.yaml for the proper data scheme.
-## example jobs list:
+default[:backup][:hdfs][:schedules] = {}
 # default[:backup][:hdfs][:schedules] = YAML.load_file(File.join(
 #   Chef::Config[:file_cache_path],
 #   'cookbooks',
@@ -47,15 +48,7 @@ default[:backup][:hdfs][:local][:oozie] =
 #   'files/default/hdfs/jobs.yml'
 # ))
 
-# empty jobs list
-default[:backup][:hdfs][:schedules] = {}
-
-# hdfs backup groups
-default[:backup][:hdfs][:user] = "oozie"
-#### default[:backup][:hdfs][:groups] = default[:backup][:hdfs][:jobs].keys
-
 ## hdfs backup tuning parameters
-
 # timeout in minutes before aborting distcp request
 default[:backup][:hdfs][:timeout] = -1
 

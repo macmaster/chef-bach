@@ -1,6 +1,6 @@
 <!--
-workflow.xml
-workflow configuration for an oozie backup job
+groups.xml
+Creates all of the service's group directories in HDFS
 
 Copyright 2018, Bloomberg Finance L.P.
 
@@ -17,27 +17,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="backup.hdfs.${jobname}">
+<workflow-app xmlns="uri:oozie:workflow:0.5" name="backup.groups.hdfs">
 
-  <start to="distcp"/>
+  <start to="groups-hdfs"/>
 
   <!-- distcp backup -->
-  <action name="distcp">
-    <distcp xmlns="uri:oozie:distcp-action:0.2">
-      <job-tracker>${jobtracker}</job-tracker>
-      <name-node>${namenode}</name-node>
-
-      <!-- preserve metadata -->
-      <arg>-ppugbtxc</arg>
-      <arg>-update</arg>
-      <arg>-bandwidth</arg>
-      <arg>${bandwidth}</arg>
-      <arg>-i</arg>
-
-      <!-- source and destination -->
-      <arg>${wf:conf("hdfs.src.namenode")}/${target}</arg>
-      <arg>${wf:conf("hdfs.backup.root")}/${group}/${basename}</arg>
-    </distcp>
+  <action name="groups-hdfs">
+    <fs>
+      <chgrp path="${wf:conf('hdfs.backup.root')}"
+        group="<%= node[:backup][@service][:user] %>" dir-files="false"/>
+      <% @groups.each do |group| %>
+      <mkdir path="${wf:conf('hdfs.backup.root')}/<%= group %>"/>
+      <chmod path="${wf:conf('hdfs.backup.root')}/<%= group %>"
+        permissions="<%= @mode %>" dir-files="false"/>
+      <chgrp path="${wf:conf('hdfs.backup.root')}/<%= group %>"
+        group="<%= group %>" dir-files="false"/>
+      <%- end %>
+    </fs>
       <ok to="end"/>
       <error to="fail"/>
   </action>

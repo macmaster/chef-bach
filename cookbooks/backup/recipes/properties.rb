@@ -18,6 +18,7 @@
 # limitations under the License.
 #
 
+# parses the job properties from an hdfs backup job
 def parse_hdfs_properties(group, schedule, job)
   # override schedule parameters
   name = job[:name] ? job[:name] : File.basename(job[:path])
@@ -43,14 +44,15 @@ def parse_service_properties(service, group, schedule, job)
   when :hdfs
     return parse_hdfs_properties(group, schedule, job)
   else
-    nil
+    nil # service not found
   end
 end
 
+# creates the properties files for the service's oozie jobs.
 def create_local_properties(service, path)
   properties_files = []
   node[:backup][service][:schedules].each do |group, schedule|
-    if !schedule[:jobs].nil?
+    if schedule[:jobs]
       schedule[:jobs].each do |job|
         job_props = parse_service_properties(service, group, schedule, job) 
         properties_file = "#{path}/#{job_props[:jobname]}.properties"
@@ -59,9 +61,9 @@ def create_local_properties(service, path)
         # oozie job.properties
         template "#{properties_file}" do
           source "#{service}/backup.properties.erb"
-          owner node[:backup][service][:user]
+          owner node[:backup][:user]
           group  node[:backup][service][:user]
-          mode "0775"
+          mode "0755"
           action :create
           variables job_props
         end
@@ -89,6 +91,7 @@ node[:backup][:services].each do |service|
   if node[:backup][service][:enabled]
     oozie_config_dir = "#{node[:backup][service][:local][:oozie]}"
     properties_files = create_local_properties(service, oozie_config_dir)
+    properties_files << "#{node[:backup][service][:local][:oozie]}/groups.properties"
     clean_local_properties(properties_files, oozie_config_dir)
   end
 end

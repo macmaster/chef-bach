@@ -2,7 +2,7 @@
 # Cookbook Name:: backup
 # Recipe:: hdfs
 # Uploads the bootstrap directory to HDFS
-# Launches the group directory workflow
+# Launches the group directory creation workflow
 #
 # Copyright 2018, Bloomberg Finance L.P.
 #
@@ -19,17 +19,24 @@
 # limitations under the License.
 #
 
-# Upload the bootstrap directory to HDFS
+# upload the bootstrap directory to HDFS
 hdfs_directory "#{node[:backup][:root]}" do
   hdfs node[:backup][:namenode]
   source node[:backup][:local][:root]
+  path "#{node[:backup][:root]}/../"
+  admin node[:backup][:user]
   action :put
 end
 
-# # restart oozie coordinators
-# oozie_job "backup.hdfs.#{group}.#{job_name}" do
-#   url node[:backup][:oozie]
-#   config "#{local_conf_dir}/backup-#{job_name}.properties"
-#   user node[:backup][:hdfs][:user]
-#   action :run
-# end
+# launch the group dir creation workflow
+node[:backup][:services].each do |service|
+  if node[:backup][service][:enabled]
+    # oozie group dir creation
+    oozie_job "backup.groups.#{service}" do
+      url node[:backup][:oozie]
+      config "#{node[:backup][service][:local][:oozie]}/groups.properties"
+      user node[:backup][:user]
+      action :run
+    end
+  end
+end
