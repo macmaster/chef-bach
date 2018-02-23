@@ -17,12 +17,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="backup.hdfs.${group}.<%= @jobname %>">
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="backup.hdfs.${jobname}">
 
-  <start to="backup-<%= @jobname %>"/>
+  <start to="hdfs-${jobname}"/>
 
   <!-- distcp backup -->
-  <action name="backup-<%= @jobname %>">
+  <action name="hdfs-${jobname}">
     <distcp xmlns="uri:oozie:distcp-action:0.2">
       <job-tracker>${jobtracker}</job-tracker>
       <name-node>${namenode}</name-node>

@@ -17,11 +17,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<coordinator-app name="backup.hdfs.${group}.<%= @jobname %>"
+<coordinator-app name="backup.hdfs.${jobname}"
   start="${coord:conf('group.backup.start')}"
   end="${coord:conf('group.backup.end')}"
   timezone="America/New_York"
-  frequency="${coord:minutes(<%= @period %>)}"
+  frequency="${period}"
   xmlns="uri:oozie:coordinator:0.1">
 
   <controls>

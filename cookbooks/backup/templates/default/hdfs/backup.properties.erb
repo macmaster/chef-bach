@@ -21,12 +21,18 @@
 # group name [A-Za-z_]+
 group=<%= @group %>
 
+# job name [A-Za-z_]+
+jobname=<%= @jobname %>
+
 # backup file / dir
 target=<%= @path %>
 basename=<%= @basename %>
 
+# backup period in minutes
+period=<%= @period %>
+
 # backup timeout in minutes (-1 = no timeout)
-timeout=-1
+timeout=<%= @timeout %>
 
 # bandwidth per distcp mapper in MB/s
 bandwidth=<%= @bandwidth %>
@@ -39,8 +45,8 @@ hdfs.dest.namenode=<%= node[:backup][:namenode] %>
 hdfs.backup.root=${hdfs.dest.namenode}/<%= node[:backup][:hdfs][:root].sub("/", "") %>
 
 # group properties
-group.backup.coordinator=${hdfs.backup.root}/${group}/.oozie/coordinator-<%= @jobname %>.xml
-group.backup.workflow=${hdfs.backup.root}/${group}/.oozie/workflow-<%= @jobname %>.xml
+group.backup.coordinator=${hdfs.backup.root}/oozie/coordinator.xml
+group.backup.workflow=${hdfs.backup.root}/oozie/workflow.xml
 
 # backup schedule (ISO date)
 group.backup.start=<%= @startdate %>

@@ -20,10 +20,11 @@
 resource_name :hdfs_directory
 
 property :hdfs, String, required: true
-property :path, String, required: true
+property :path, String, name_property: true
 property :owner, String
 property :group, String
 property :mode, String
+property :source, String
 
 action :create do
   require "mixlib/shellout"
@@ -47,6 +48,13 @@ action :create do
   end
 
   Mixlib::ShellOut.new(hdfs_cmds.join(" && "), timeout: 90).run_command.error!
+end
+
+action :put do
+  require "mixlib/shellout"
+  Chef::Log.info("Copying #{path} to HDFS")
+
+  Mixlib::ShellOut.new("sudo -u hdfs hdfs dfs -put -f -p #{src} #{hdfs}/#{path}", timeout: 90).run_command.error!
 end
 
 action :delete do

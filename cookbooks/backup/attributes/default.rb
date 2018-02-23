@@ -27,16 +27,20 @@ default[:backup][:namenode] = "hdfs://localhost:9000"
 default[:backup][:jobtracker] = "localhost:8032"
 default[:backup][:oozie] = "http://localhost:11000/oozie"
 
+# list of backup services
+default[:backup][:services] = [:hdfs]
 
 ## hdfs backups
 default[:backup][:hdfs][:enabled] = true
 default[:backup][:hdfs][:root] = "#{node[:backup][:root]}/hdfs"
 default[:backup][:hdfs][:local][:root] = "#{node[:backup][:local][:root]}/hdfs"
+default[:backup][:hdfs][:local][:oozie] = 
+  "#{node[:backup][:hdfs][:local][:root]}/oozie" 
 
 # hdfs backup requests
 ## NOTE: refer to files/default/hdfs/jobs.yaml for the proper data scheme.
 ## example jobs list:
-# default[:backup][:hdfs][:jobs] = YAML.load_file(File.join(
+# default[:backup][:hdfs][:schedules] = YAML.load_file(File.join(
 #   Chef::Config[:file_cache_path],
 #   'cookbooks',
 #   'backup',
@@ -44,11 +48,11 @@ default[:backup][:hdfs][:local][:root] = "#{node[:backup][:local][:root]}/hdfs"
 # ))
 
 # empty jobs list
-default[:backup][:hdfs][:jobs] = {}
+default[:backup][:hdfs][:schedules] = {}
 
 # hdfs backup groups
 default[:backup][:hdfs][:user] = "hdfs"
-default[:backup][:hdfs][:groups] = default[:backup][:hdfs][:jobs].keys
+#### default[:backup][:hdfs][:groups] = default[:backup][:hdfs][:jobs].keys
 
 ## hdfs backup tuning parameters
 

@@ -1,6 +1,8 @@
 #
 # Cookbook Name:: backup
-# Recipe:: default
+# Recipe:: hdfs
+# Uploads the bootstrap directory to HDFS
+# Launches the group directory workflow
 #
 # Copyright 2018, Bloomberg Finance L.P.
 #
@@ -17,5 +19,12 @@
 # limitations under the License.
 #
 
-# Print the jobs list hash
-p node[:backup][:hdfs][:schedules]
+# Upload the bootstrap directory to HDFS
+
+# # restart oozie coordinators
+# oozie_job "backup.hdfs.#{group}.#{job_name}" do
+#   url node[:backup][:oozie]
+#   config "#{local_conf_dir}/backup-#{job_name}.properties"
+#   user node[:backup][:hdfs][:user]
+#   action :run
+# end
