@@ -20,6 +20,11 @@
 #
 
 # Upload the bootstrap directory to HDFS
+hdfs_directory "#{node[:backup][:root]}" do
+  hdfs node[:backup][:namenode]
+  source node[:backup][:local][:root]
+  action :put
+end
 
 # # restart oozie coordinators
 # oozie_job "backup.hdfs.#{group}.#{job_name}" do

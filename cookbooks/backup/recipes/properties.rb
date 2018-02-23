@@ -58,7 +58,7 @@ def create_local_properties(service, path)
 
         # oozie job.properties
         template "#{properties_file}" do
-          source "backup.properties.erb"
+          source "#{service}/backup.properties.erb"
           owner node[:backup][service][:user]
           group  node[:backup][service][:user]
           mode "0775"
@@ -93,8 +93,3 @@ node[:backup][:services].each do |service|
   end
 end
 
-hdfs_directory "#{node[:backup][:root]}" do
-  hdfs node[:backup][:namenode]
-  source node[:backup][:local][:root]
-  action :put
-end

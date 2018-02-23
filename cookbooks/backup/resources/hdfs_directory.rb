@@ -53,8 +53,7 @@ end
 action :put do
   require "mixlib/shellout"
   Chef::Log.info("Copying #{path} to HDFS")
-
-  Mixlib::ShellOut.new("sudo -u hdfs hdfs dfs -put -f -p #{src} #{hdfs}/#{path}", timeout: 90).run_command.error!
+  Mixlib::ShellOut.new("sudo -u hdfs hdfs dfs -put -f -p #{source} #{hdfs}/#{path}", timeout: 90).run_command.error!
 end
 
 action :delete do

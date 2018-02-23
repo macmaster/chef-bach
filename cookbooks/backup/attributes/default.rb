@@ -51,7 +51,7 @@ default[:backup][:hdfs][:local][:oozie] =
 default[:backup][:hdfs][:schedules] = {}
 
 # hdfs backup groups
-default[:backup][:hdfs][:user] = "hdfs"
+default[:backup][:hdfs][:user] = "oozie"
 #### default[:backup][:hdfs][:groups] = default[:backup][:hdfs][:jobs].keys
 
 ## hdfs backup tuning parameters
