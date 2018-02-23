@@ -50,16 +50,12 @@ end
 
 # creates the properties files for the service's oozie jobs.
 def create_local_properties(service, path)
-  properties_files = []
   node[:backup][service][:schedules].each do |group, schedule|
     if schedule[:jobs]
       schedule[:jobs].each do |job|
-        job_props = parse_service_properties(service, group, schedule, job) 
-        properties_file = "#{path}/#{job_props[:jobname]}.properties"
-        properties_files << properties_file
-
         # oozie job.properties
-        template "#{properties_file}" do
+        job_props = parse_service_properties(service, group, schedule, job) 
+        template "#{path}/#{job_props[:jobname]}.properties" do
           source "#{service}/backup.properties.erb"
           owner node[:backup][:user]
           group  node[:backup][service][:user]
@@ -70,29 +66,12 @@ def create_local_properties(service, path)
       end
     end
   end
-
-  # list of files created
-  return properties_files
-end
-
-# removes all directories in #{path} not included in the #{filter} array.
-def clean_local_properties(filter, path)
-  files = Dir.glob("#{path}/*.properties").select { |entry| File.file? entry }
-  files.each do |filename|
-    file "#{filename}#delete" do
-      path filename
-      action :delete
-      not_if { filter.include? filename }
-    end
-  end
 end
 
 node[:backup][:services].each do |service|
   if node[:backup][service][:enabled]
     oozie_config_dir = "#{node[:backup][service][:local][:oozie]}"
-    properties_files = create_local_properties(service, oozie_config_dir)
-    properties_files << "#{node[:backup][service][:local][:oozie]}/groups.properties"
-    clean_local_properties(properties_files, oozie_config_dir)
+    create_local_properties(service, oozie_config_dir)
   end
 end
 

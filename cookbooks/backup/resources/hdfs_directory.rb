@@ -22,10 +22,10 @@ resource_name :hdfs_directory
 property :hdfs, String, required: true
 property :path, String, name_property: true
 property :admin, String, default: 'hdfs'
+property :source, String
 property :owner, String
 property :group, String
 property :mode, String
-property :source, String
 
 action_class do
   def execute(command, user=admin, timeout=90)

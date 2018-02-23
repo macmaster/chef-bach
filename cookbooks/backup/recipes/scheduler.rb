@@ -29,11 +29,13 @@ node[:backup][:services].each do |service|
         schedule[:jobs].each do |job|
           name = job[:name] ? job[:name] : File.basename(job[:path])
           jobname = "#{group}-#{name}"
+          properties_file = "#{node[:backup][service][:local][:oozie]}/#{jobname}.properties"
+          coordinator_file = "#{node[:backup][service][:local][:oozie]}/coordinator.xml"
 
           # restart oozie coordinators
           oozie_job "backup.#{service}.#{jobname}" do
             url node[:backup][:oozie]
-            config "#{node[:backup][service][:local][:oozie]}/#{jobname}.properties"
+            config properties_file
             user group
             action :run
             ignore_failure true

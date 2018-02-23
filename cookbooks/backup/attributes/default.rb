@@ -26,6 +26,7 @@ default[:backup][:local][:root] = "/etc/backup"
 default[:backup][:namenode] = "hdfs://localhost:9000"
 default[:backup][:jobtracker] = "localhost:8032"
 default[:backup][:oozie] = "http://localhost:11000/oozie"
+default[:backup][:queue] = "default"
 
 # list of backup services
 default[:backup][:services] = [:hdfs]

@@ -21,41 +21,54 @@ resource_name :hdfs_file
 
 property :hdfs, String, required: true
 property :path, String, required: true
-property :source, String, required: true
+property :admin, String, default: 'hdfs'
+property :source, String
 property :owner, String
 property :group, String
 property :mode, String
 
-action :create do
-  require "mixlib/shellout"
-  Chef::Log.info("HDFS file #{path} creation")
+action_class do
+  def execute(command, user=admin, timeout=90)
+    require 'mixlib/shellout'
+    Chef::Log.info("Running command(#{user}): #{command}")
+    puts command
+    return Mixlib::ShellOut.new("sudo -u #{user} " + command, timeout: timeout).run_command
+  end
+end
 
-  # copy the source file to hdfs
-  hdfs_cmds = ["sudo -u hdfs hdfs dfs -copyFromLocal -f #{source} #{hdfs}/#{path}"]
+action :create do
+  # create the file
+  Chef::Log.info("HDFS file #{path} creation")
+  if source.nil?
+    execute("hdfs dfs -touchz  #{hdfs}/#{path}", admin).error!
+  else
+    execute("hdfs dfs -put -p -f #{source} #{hdfs}/#{path}", admin).error!
+  end
 
   # set the owner and group
   if !(owner.nil? || group.nil?)
-    hdfs_cmds << "sudo -u hdfs hdfs dfs -chown #{owner}:#{group} #{hdfs}/#{path}"
+    execute("hdfs dfs -chown #{owner}:#{group} #{hdfs}/#{path}", admin).error!
   elsif !owner.nil?
-    hdfs_cmds << "sudo -u hdfs hdfs dfs -chown #{owner} #{hdfs}/#{path}"
+    execute("hdfs dfs -chown #{owner} #{hdfs}/#{path}", admin).error!
   elsif !group.nil?
-    hdfs_cmds << "sudo -u hdfs hdfs dfs -chgrp #{group} #{hdfs}/#{path}"
+    execute("hdfs dfs -chgrp #{group} #{hdfs}/#{path}", admin).error!
   end
 
   # set permissions
   if !mode.nil?
-    hdfs_cmds << "sudo -u hdfs hdfs dfs -chmod #{mode} #{hdfs}/#{path}"
+    execute("hdfs dfs -chmod #{mode} #{hdfs}/#{path}", admin).error!
   end
+end
 
-  Mixlib::ShellOut.new(hdfs_cmds.join(" && "), timeout: 90).run_command.error!
+action :put do
+  Chef::Log.info("Copying #{path} to HDFS")
+  execute("hdfs dfs -put -f -p #{source} #{hdfs}/#{path}", admin).run_command.error!
 end
 
 action :delete do
-  require "mixlib/shellout"
-  Chef::Log.info("HDFS file #{path} deletion")
-
   # speculative, recursive delete. (ignores error)
-  Mixlib::Shellout.new("sudo -u hdfs hdfs dfs -rm -r -f", timeout: 90).run_command
+  Chef::Log.info("HDFS file #{path} deletion")
+  execute("hdfs dfs -rm -r -f #{hdfs}/#{path}", admin)
 end
 
 action :nothing do

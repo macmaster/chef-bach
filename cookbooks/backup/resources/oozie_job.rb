@@ -23,7 +23,7 @@ provides :oozie_job
 property :name, String, name_property: true
 property :url, String, required: true
 property :config, String, required: true
-property :user, String
+property :user, String, default: 'oozie'
 
 action_class do
   include Oozie
