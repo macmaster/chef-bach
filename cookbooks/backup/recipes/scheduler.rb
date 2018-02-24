@@ -27,7 +27,7 @@ node[:backup][:services].each do |service|
       # scheduler parameters
       name = job[:name] ? job[:name] : File.basename(job[:path])
       jobname = "#{group}-#{name}"
-      oozie_config_dir = node[:backup][service[:local][:oozie]
+      oozie_config_dir = node[:backup][service][:local][:oozie]
       properties_file = "#{oozie_config_dir}/#{jobname}.properties"
       coordinator_file = "#{oozie_config_dir}/coordinator.xml"
 
