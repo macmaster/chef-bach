@@ -20,23 +20,21 @@
 #
 
 # upload the bootstrap directory to HDFS
-hdfs_directory "#{node[:backup][:root]}" do
+hdfs_directory node[:backup][:root] do
   hdfs node[:backup][:namenode]
   source node[:backup][:local][:root]
-  path "#{node[:backup][:root]}/../"
+  path File.dirname("#{node[:backup][:root]}")
   admin node[:backup][:user]
   action :put
 end
 
 # launch the group dir creation workflow
 node[:backup][:services].each do |service|
-  if node[:backup][service][:enabled]
-    # oozie group dir creation
-    oozie_job "backup.groups.#{service}" do
-      url node[:backup][:oozie]
-      config "#{node[:backup][service][:local][:oozie]}/groups.properties"
-      user node[:backup][:user]
-      action :run
-    end
+  oozie_config_dir = node[:backup][service][:local][:oozie]
+  oozie_job "backup.groups.#{service}" do
+    url node[:backup][:oozie]
+    config "#{oozie_config_dir}/groups.properties"
+    user node[:backup][:user]
+    action :run
   end
 end

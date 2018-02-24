@@ -22,24 +22,32 @@ default[:backup][:user] = "hdfs"
 default[:backup][:root] = "/backup"
 default[:backup][:local][:root] = "/etc/backup"
 
+# list of enabled backup services
+default[:backup][:services] = [:hdfs]
+
 # storage cluster
 default[:backup][:namenode] = "hdfs://localhost:9000"
 default[:backup][:jobtracker] = "localhost:8032"
 default[:backup][:oozie] = "http://localhost:11000/oozie"
 default[:backup][:queue] = "default"
 
-# list of backup services
-default[:backup][:services] = [:hdfs]
-
-## hdfs backups
-default[:backup][:hdfs][:enabled] = true
+### hdfs backups
 default[:backup][:hdfs][:user] = "hdfs"
 default[:backup][:hdfs][:root] = "#{node[:backup][:root]}/hdfs"
 default[:backup][:hdfs][:local][:root] = "#{node[:backup][:local][:root]}/hdfs"
+
+# local oozie config dir
 default[:backup][:hdfs][:local][:oozie] = 
   "#{node[:backup][:hdfs][:local][:root]}/oozie" 
 
-# hdfs backup requests
+## hdfs backup tuning parameters
+# timeout in minutes before aborting distcp request
+default[:backup][:hdfs][:timeout] = -1
+
+# bandlimit in MB/s per mapper
+default[:backup][:hdfs][:mapper][:bandwidth] = 25
+
+### hdfs backup requests
 ## NOTE: refer to files/default/hdfs/jobs.yaml for the proper data scheme.
 default[:backup][:hdfs][:schedules] = {}
 # default[:backup][:hdfs][:schedules] = YAML.load_file(File.join(
@@ -48,12 +56,5 @@ default[:backup][:hdfs][:schedules] = {}
 #   'backup',
 #   'files/default/hdfs/jobs.yml'
 # ))
-
-## hdfs backup tuning parameters
-# timeout in minutes before aborting distcp request
-default[:backup][:hdfs][:timeout] = -1
-
-# bandlimit in MB/s per mapper
-default[:backup][:hdfs][:mapper][:bandwidth] = 25
 
 ## FUTURE: HBase, Hive, and Phoenix backups

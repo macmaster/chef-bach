@@ -2,6 +2,7 @@
 # Cookbook Name:: backup
 # Recipe:: bootstrap
 # Creates the local backup bootstrap directory
+# Generates the starter oozie configurations
 #
 # Copyright 2018, Bloomberg Finance L.P.
 #
@@ -20,7 +21,7 @@
 
 # create the local configuration root
 # holds local copies of the oozie configurations
-directory "#{node[:backup][:local][:root]}" do
+directory node[:backup][:local][:root] do
   owner node[:backup][:user]
   group node[:backup][:user]
   mode "0755"
@@ -28,45 +29,35 @@ directory "#{node[:backup][:local][:root]}" do
 end
 
 node[:backup][:services].each do |service|
-  if node[:backup][service][:enabled]
-    # create the service backup root (drwxr-xr-x)
-    directory "#{node[:backup][service][:local][:root]}" do
-      owner node[:backup][:user]
-      group node[:backup][service][:user]
-      mode "0755"
-      action :create
-    end
-    
-    # create the oozie config directory (drwxr-xr-x)
-    directory "#{node[:backup][service][:local][:oozie]}" do
-      owner node[:backup][:user]
-      group node[:backup][service][:user]
-      mode "0755"
-      action :create
-    end
+  # create the service backup root (drwxr-xr-x)
+  directory node[:backup][service][:local][:root] do
+    owner node[:backup][:user]
+    group node[:backup][service][:user]
+    mode "0755"
+    action :create
+  end
+  
+  # create the oozie config directory (drwxr-xr-x)
+  directory node[:backup][service][:local][:oozie] do
+    owner node[:backup][:user]
+    group node[:backup][service][:user]
+    mode "0755"
+    action :create
+  end
 
-    # oozie workflow.xml
-    template "#{node[:backup][service][:local][:oozie]}/workflow.xml" do
-      source "#{service}/workflow.xml.erb"
-      owner node[:backup][:user]
-      group node[:backup][service][:user]
-      mode "0755"
-      action :create
-    end
+  # oozie config files
+  oozie_config_dir = node[:backup][service][:local][:oozie]
+  oozie_configs = %w(
+    groups.properties
+    groups.xml
+    workflow.xml
+    coordinator.xml
+  )
 
-    # oozie coordinator.xml
-    template "#{node[:backup][service][:local][:oozie]}/coordinator.xml" do
-      source "#{service}/coordinator.xml.erb"
-      owner node[:backup][:user]
-      group node[:backup][service][:user]
-      mode "0755"
-      action :create
-    end
-
-    # oozie groups.xml
-    # creates the hdfs group directories under bootstrap dir.
-    template "#{node[:backup][service][:local][:oozie]}/groups.xml" do
-      source "#{service}/groups.xml.erb"
+  # source configuration templates
+  oozie_configs.each do |config|
+    template "#{oozie_config_dir}/#{config}" do
+      source "#{service}/#{config}.erb"
       owner node[:backup][:user]
       group node[:backup][service][:user]
       mode "0755"
@@ -76,15 +67,6 @@ node[:backup][:services].each do |service|
         groups: node[:backup][service][:schedules].keys,
         mode: '-rwxrwx---'
       )
-    end
-
-    # oozie groups.properties
-    template "#{node[:backup][service][:local][:oozie]}/groups.properties" do
-      source "#{service}/groups.properties.erb"
-      owner node[:backup][:user]
-      group node[:backup][service][:user]
-      mode "0755"
-      action :create
     end
   end
 end

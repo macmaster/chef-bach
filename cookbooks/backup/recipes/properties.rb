@@ -48,30 +48,23 @@ def parse_service_properties(service, group, schedule, job)
   end
 end
 
-# creates the properties files for the service's oozie jobs.
-def create_local_properties(service, path)
+# parse job schedules and create properties files
+node[:backup][:services].each do |service|
   node[:backup][service][:schedules].each do |group, schedule|
-    if schedule[:jobs]
-      schedule[:jobs].each do |job|
-        # oozie job.properties
-        job_props = parse_service_properties(service, group, schedule, job) 
-        template "#{path}/#{job_props[:jobname]}.properties" do
-          source "#{service}/backup.properties.erb"
-          owner node[:backup][:user]
-          group  node[:backup][service][:user]
-          mode "0755"
-          action :create
-          variables job_props
-        end
+    schedule[:jobs].each do |job|
+
+      # oozie job.properties
+      oozie_config_dir = node[:backup][service][:local][:oozie]
+      job_props = parse_service_properties(service, group, schedule, job) 
+      template "#{oozie_config_dir}/#{job_props[:jobname]}.properties" do
+        source "#{service}/backup.properties.erb"
+        owner node[:backup][:user]
+        group node[:backup][service][:user]
+        mode "0755"
+        action :create
+        variables job_props
       end
+
     end
   end
 end
-
-node[:backup][:services].each do |service|
-  if node[:backup][service][:enabled]
-    oozie_config_dir = "#{node[:backup][service][:local][:oozie]}"
-    create_local_properties(service, oozie_config_dir)
-  end
-end
-

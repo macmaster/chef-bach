@@ -41,32 +41,28 @@ def cleanup_service(filter, service, path)
   # get stale local properties files
   files = Dir.glob("#{path}/*.properties").select { |entry| File.file? entry }
   names = files.map { |filename| /#{path}\/(.+).properties/.match(filename)[1] }
+  names.select { |name| !filter.include? name }.each do |name|
+    # remove the local properties file
+    file "#{path}/#{name}.properties#delete" do
+      path "#{path}/#{name}.properties"
+      action :delete
+    end
 
-  names.each do |name|
-    puts "deleting stale job: #{name}"
-    if !filter.include? name
-      # remove the local properties file
-      file "#{path}/#{name}.properties#delete" do
-        path "#{path}/#{name}.properties"
-        action :delete
-      end
+    # remove the hdfs properties file
+    hdfs_file "#{path}/#{name}.properties#delete" do
+      hdfs node[:backup][:namenode]
+      path "#{node[:backup][service][:root]}/#{name}.properties"
+      admin node[:backup][:user]
+      action :delete
+    end
 
-      # remove the hdfs properties file
-      hdfs_file "#{path}/#{name}.properties" do
-        hdfs node[:backup][:namenode]
-        path "#{node[:backup][service][:root]}/#{name}.properties"
-        admin node[:backup][:user]
-        action :delete
-      end
-
-      # kill stale oozie coordinator
-      oozie_job "backup.#{service}.#{name}#kill" do
-        url node[:backup][:oozie]
-        name "backup.#{service}.#{name}" 
-        user node[:backup][:user]
-        action :kill
-        ignore_failure true
-      end
+    # kill stale oozie coordinator
+    oozie_job "backup.#{service}.#{name}#kill" do
+      url node[:backup][:oozie]
+      name "backup.#{service}.#{name}" 
+      user node[:backup][:user]
+      action :kill
+      ignore_failure true
     end
   end
 end
@@ -79,4 +75,3 @@ node[:backup][:services].each do |service|
     cleanup_service(jobnames, service, oozie_config_dir)
   end
 end
-
