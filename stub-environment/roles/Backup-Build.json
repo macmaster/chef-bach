@@ -4,10 +4,12 @@
     "chef_type": "role",
     "json_class": "Chef::Role",
     "run_list": [
-# "recipe[java::default]",
-# "recipe[bcpc-hadoop::maven_config]",
-# "recipe[maven::default]",
-# "recipe[hannibal::hannibal_build]"
+      "recipe[bach_backup::default]",
+      "recipe[backup::default]",
+      "recipe[backup::bootstrap]",
+      "recipe[backup::properties]",
+      "recipe[backup::hdfs]",
+      "recipe[backup::scheduler]",
     ],
     "default_attributes": {
     },
