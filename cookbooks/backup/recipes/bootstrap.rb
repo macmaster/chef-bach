@@ -36,7 +36,7 @@ node[:backup][:services].each do |service|
     mode "0755"
     action :create
   end
-  
+
   # create the oozie config directory (drwxr-xr-x)
   directory node[:backup][service][:local][:oozie] do
     owner node[:backup][:user]

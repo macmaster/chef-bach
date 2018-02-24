@@ -1,7 +1,7 @@
 # hdfs_jobs.yaml
 # YAML model of HDFS backup jobs.
 # All keys should be preceded with a ':' s.t. they're read as ruby symbols.
-# 
+#
 # :group_name:
 #   :hdfs: valid hdfs source uri (string)
 #   :start: ISO datetime start (string)

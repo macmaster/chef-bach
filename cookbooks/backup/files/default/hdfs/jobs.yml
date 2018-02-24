@@ -2,7 +2,7 @@
 # YAML model of backup jobs.
 # Disclaimer: This is an example.
 # All keys should be preceded with a ':' s.t. they're read as ruby symbols.
-# 
+#
 # :group_name:
 #   :hdfs: valid hdfs source uri (string)
 #   :start: ISO datetime start (string)

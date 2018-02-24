@@ -22,7 +22,7 @@ module Oozie
     attr_accessor :oozie_url, :user
 
     def initialize(oozie_url='http://localhost:11000/oozie', user='oozie')
-      @oozie = oozie_url 
+      @oozie = oozie_url
       @user = user
     end
 

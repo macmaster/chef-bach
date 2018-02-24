@@ -37,8 +37,8 @@ default[:backup][:hdfs][:root] = "#{node[:backup][:root]}/hdfs"
 default[:backup][:hdfs][:local][:root] = "#{node[:backup][:local][:root]}/hdfs"
 
 # local oozie config dir
-default[:backup][:hdfs][:local][:oozie] = 
-  "#{node[:backup][:hdfs][:local][:root]}/oozie" 
+default[:backup][:hdfs][:local][:oozie] =
+  "#{node[:backup][:hdfs][:local][:root]}/oozie"
 
 ## hdfs backup tuning parameters
 # timeout in minutes before aborting distcp request

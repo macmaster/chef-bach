@@ -55,7 +55,7 @@ node[:backup][:services].each do |service|
 
       # oozie job.properties
       oozie_config_dir = node[:backup][service][:local][:oozie]
-      job_props = parse_service_properties(service, group, schedule, job) 
+      job_props = parse_service_properties(service, group, schedule, job)
       template "#{oozie_config_dir}/#{job_props[:jobname]}.properties" do
         source "#{service}/backup.properties.erb"
         owner node[:backup][:user]
