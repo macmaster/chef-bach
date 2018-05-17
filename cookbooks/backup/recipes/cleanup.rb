@@ -67,11 +67,12 @@ def cleanup_service(filter, service, path)
   end
 end
 
-node[:backup][:services].each do |service|
-  if node[:backup][service][:enabled]
-    oozie_config_dir = "#{node[:backup][service][:local][:oozie]}"
-    jobnames = get_job_names(service, oozie_config_dir)
-    jobnames << "groups"
-    cleanup_service(jobnames, service, oozie_config_dir)
-  end
+node[:backup][:services].select do |service|
+  node[:backup][service][:enabled]
+end.each do |service|
+  oozie_config_dir = "#{node[:backup][service][:local][:oozie]}"
+  jobnames = get_job_names(service, oozie_config_dir)
+  jobnames << "groups"
+  puts "jobnames: #{jobnames}"
+  cleanup_service(jobnames, service, oozie_config_dir)
 end
