@@ -1,0 +1,44 @@
+# hdfs_jobs.yaml
+# YAML model of HDFS backup jobs.
+# All keys should be preceded with a ':' s.t. they're read as ruby symbols.
+#
+# :group_name:
+#   :hdfs: valid hdfs source uri (string)
+#   :start: ISO datetime start (string)
+#   :end: ISO datetime end (string)
+#   :jobs:
+#     - :path: hdfs path to backup target (string)
+#       :hdfs: (OPTIONAL) override top-level hdfs uri (string)
+#       :period: period in minutes between backup actions (integer)
+---
+:hdfs:
+  :hdfs: 'hdfs://Test-Laptop'
+  :start: '2018-02-16T12:00Z'
+  :end: '2018-02-26T06:00Z'
+  :jobs:
+    - :path: '/tmp'
+      :period: 360
+    - :path: '/user'
+      :hdfs: 'hdfs://Test-Laptop'
+      :period: 480
+    - :path: '/tmp/garbage'
+      :period: 240
+
+:mapred:
+  :hdfs: 'hdfs://Test-Laptop'
+  :start: '2018-02-16T08:00Z'
+  :end: '2018-03-02T08:00Z'
+  :jobs:
+    - :path: '/app'
+      :period: 720
+    - :path: '/var/log'
+      :period: 1440
+
+# :bach:
+#   :hdfs: 'hdfs://Test-Laptop'
+#   :start: '2018-02-16T08:00Z'
+#   :end: '2018-03-02T08:00Z'
+#   :period: 120
+#   :jobs:
+#     - :path: '/app'
+#     - :path: '/var/log'
