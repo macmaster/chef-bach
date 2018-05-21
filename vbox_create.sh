@@ -69,8 +69,10 @@ require './lib/cluster_data.rb';
 include BACH::ClusterData;
 cp=ENV.fetch('BACH_CLUSTER_PREFIX', '');
 cp += '-' unless cp.empty?;
-vms = parse_cluster_txt(File.readlines('cluster.txt'))
-puts vms.map{|e| cp + e[:hostname]}.join(' ')
+vms = parse_cluster_txt(File.readlines('cluster.txt')).map do |e|
+  (e[:hostname] !~ /^#{cp}/) ? (cp + e[:hostname]) : e[:hostname]
+end.join(' ')
+puts vms
 "
 export VM_LIST=( $(/usr/bin/env ruby -e "$code_to_produce_vm_list") )
 
