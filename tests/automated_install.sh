@@ -25,13 +25,12 @@ export BACH_REPO_DIR=$(git rev-parse --show-toplevel)
 export BACH_CLUSTER_DIR=${BACH_REPO_DIR}/../cluster
 
 if [[ $(pwd) != $BACH_REPO_DIR ]]; then
-  printf '#### WARNING: This should be run in the git top level directory! ####\n' >/dev/stderr
+  printf "#### WARNING: This should be run in the git top level directory! ####\n" >/dev/stderr
 fi
 
+export BOOTSTRAP_NAME="bcpc-bootstrap"
 if [ -n $BACH_CLUSTER_PREFIX ]; then
   export BOOTSTRAP_NAME="${BACH_CLUSTER_PREFIX}-${BOOTSTRAP_NAME}"
-else
-  export BOOTSTRAP_NAME="bcpc-bootstrap"
 fi
 
 # OS-Specific Dependencies
@@ -138,7 +137,7 @@ else
   bash -c "$WAIT_FOR_HOSTS"
 fi
 
-printf "Finished waiting for hosts to boot."
+printf "Finished waiting for hosts to boot.\n"
 snapshotVMs "${SNAP_POST_PXE}"
 
 printf "#### Chef the nodes with Basic role\n"
@@ -150,7 +149,7 @@ printf "Cluster type: $CLUSTER_TYPE\n"
 
 # Kafka does not run Bootstrap step
 if [ "${CLUSTER_TYPE}" == "hadoop" ]; then
-  printf "Running C-A-R 'bootstrap' before final C-A-R"
+  printf "Running C-A-R 'bootstrap' before final C-A-R\n"
   # https://github.com/bloomberg/chef-bach/issues/847
   # We know the first run might fail set +e
   set +e
@@ -159,7 +158,7 @@ if [ "${CLUSTER_TYPE}" == "hadoop" ]; then
   # if we still fail here we have some other issue
   vagrant ssh -c "cd chef-bcpc; ./cluster-assign-roles.sh $BACH_ENVIRONMENT Bootstrap"
   snapshotVMs "${SNAP_POST_BOOTSTRAP}"
-  printf "Running final C-A-R(s)"
+  printf "Running final C-A-R(s)\n"
 fi
 
 printf "#### Chef machine bcpc-vms with $CLUSTER_TYPE\n"
@@ -172,4 +171,4 @@ if [[ "${CLUSTER_TYPE}" == "hadoop" ]]; then
 fi
 snapshotVMs "${SNAP_POST_INSTALL}"
 
-printf '#### Install Completed!\n'
+printf "#### Install Completed!\n"
