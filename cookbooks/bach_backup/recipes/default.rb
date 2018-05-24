@@ -13,3 +13,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+user node[:backup][:user] do
+  comment 'backup user'
+end
+
+configure_kerberos 'backup_kerberos' do
+  service_name 'backup'
+end
