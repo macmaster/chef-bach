@@ -1,5 +1,4 @@
-#
-# Cookbook Name:: backup
+# Cookbook Name::backup
 # Recipe:: cleanup
 # Cleans up the state of the storage cluster.
 # Removes old configurations. Kills stale coordinators.
@@ -17,44 +16,47 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
 # creates the properties files for the service's oozie jobs.
-def get_job_names(service, path)
-  job_names = []
-  node[:backup][service][:schedules].each do |group, schedule|
-    if schedule[:jobs]
-      schedule[:jobs].each do |job|
-        name = job[:name] ? job[:name] : File.basename(job[:path])
-        job_names << "#{group}-#{name}"
-      end
+def get_job_names(service)
+  job_schedules = node[:backup][service][:schedules]
+  job_schedules.inject([]) do |job_names, job_schedule|
+    group, schedule = job_schedule
+    names = (schedule[:jobs] || []).map do |job|
+      "#{group}-#{job[:name] || File.basename(job[:path])}"
     end
+    job_names.push(*names)
   end
-
-  # list of files created
-  return job_names
 end
 
 # removes all local properties in #{path} not included in the #{filter}
 # kills the stale oozie coordinators
 def cleanup_service(filter, service, path)
-  # get stale local properties files
-  files = Dir.glob("#{path}/*.properties").select { |entry| File.file? entry }
-  names = files.map { |filename| /#{path}\/(.+).properties/.match(filename)[1] }
-  names.select { |name| !filter.include? name }.each do |name|
+  # Get a list of stale jobs
+  # Checks the existing local properties files against current job set.
+  stale_jobs = Dir.glob("#{path}/*.properties").select do |entry| 
+    File.file? entry
+  end.map do |filename| 
+    /#{path}\/(.+).properties/.match(filename)[1]
+  end.select do |name|
+    !filter.include? name
+  end
+
+  puts "stale jobs: #{stale_jobs}"
+  stale_jobs.each do |name|
     # remove the local properties file
     file "#{path}/#{name}.properties#delete" do
       path "#{path}/#{name}.properties"
       action :delete
     end
 
-    # # remove the hdfs properties file
-    # hdfs_file "#{path}/#{name}.properties#delete" do
-    #   hdfs node[:backup][:namenode]
-    #   path "#{node[:backup][service][:root]}/#{name}.properties"
-    #   admin node[:backup][:user]
-    #   action :delete
-    # end
+    # remove the hdfs properties file
+    hdfs_file "#{path}/#{name}.properties#delete" do
+      hdfs node[:backup][:namenode]
+      path "#{node[:backup][service][:root]}/#{name}.properties"
+      admin node[:backup][:user]
+      action :delete
+    end
 
     # # kill stale oozie coordinator
     # oozie_job "backup.#{service}.#{name}#kill" do
@@ -67,12 +69,9 @@ def cleanup_service(filter, service, path)
   end
 end
 
-node[:backup][:services].select do |service|
-  node[:backup][service][:enabled]
-end.each do |service|
-  oozie_config_dir = "#{node[:backup][service][:local][:oozie]}"
-  jobnames = get_job_names(service, oozie_config_dir)
+node[:backup][:services].each do |service|
+  oozie_config_dir = node[:backup][service][:local][:oozie]
+  jobnames = get_job_names(service)
   jobnames << "groups"
-  puts "jobnames: #{jobnames}"
   cleanup_service(jobnames, service, oozie_config_dir)
 end

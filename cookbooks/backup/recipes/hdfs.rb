@@ -1,4 +1,3 @@
-#
 # Cookbook Name:: backup
 # Recipe:: hdfs
 # Uploads the bootstrap directory to HDFS
@@ -17,7 +16,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
 # upload the bootstrap directory to HDFS
 hdfs_directory node[:backup][:root] do

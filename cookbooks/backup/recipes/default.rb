@@ -1,5 +1,4 @@
-#
-# Cookbook Name:: backup
+# Cookbook Name::backup
 # Recipe:: default
 #
 # Copyright 2018, Bloomberg Finance L.P.
@@ -15,7 +14,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
 # Print the jobs list hash
 p node[:backup][:hdfs][:schedules]

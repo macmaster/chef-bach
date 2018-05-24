@@ -1,5 +1,4 @@
-#
-# Cookbook Name:: backup
+# Cookbook Name::backup
 # Recipe:: properties
 # Creates the local oozie job.properties files
 #
@@ -16,14 +15,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
 # parses the job properties from an hdfs backup job
 def parse_hdfs_properties(group, schedule, job)
   # override schedule parameters
-  name = job[:name] ? job[:name] : File.basename(job[:path])
-  hdfs_src = job[:hdfs] ? job[:hdfs] : schedule[:hdfs]
-  period = job[:period] ? job[:period] : schedule[:period]
+  name = job[:name] || File.basename(job[:path])
+  hdfs_src = job[:hdfs] || schedule[:hdfs]
+  period = job[:period] || schedule[:period]
 
   return {
     group: group,
@@ -42,14 +40,14 @@ end
 def parse_service_properties(service, group, schedule, job)
   case service.to_sym
   when :hdfs
-    return parse_hdfs_properties(group, schedule, job)
+    parse_hdfs_properties(group, schedule, job)
   else
     nil # service not found
   end
 end
 
 # parse job schedules and create properties files
-node[:backup][:services].each do |service|
+node[:backup][:services].map do |service|
   node[:backup][service][:schedules].each do |group, schedule|
     schedule[:jobs].each do |job|
 

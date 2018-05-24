@@ -29,7 +29,7 @@ if [[ $(pwd) != $BACH_REPO_DIR ]]; then
 fi
 
 export BOOTSTRAP_NAME="bcpc-bootstrap"
-if [ -n $BACH_CLUSTER_PREFIX ]; then
+if [[ -n $BACH_CLUSTER_PREFIX ]]; then
   export BOOTSTRAP_NAME="${BACH_CLUSTER_PREFIX}-${BOOTSTRAP_NAME}"
 fi
 

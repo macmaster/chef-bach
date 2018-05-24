@@ -137,6 +137,15 @@ default['bcpc']['hadoop']['kerberos']['data'] = {
       perms: '0440',
       spnego_keytab: 'spnego.service.keytab'
   }
+  backup: {
+      principal: 'backup',
+      keytab: 'backup.service.keytab',
+      owner: 'backup',
+      group: 'backup',
+      princhost: '_HOST',
+      perms: '0440',
+      spnego_keytab: 'spnego.service.keytab'
+  }
 }
 default[:bcpc][:hadoop][:kerberos][:keytab][:dir] = "/etc/security/keytabs"
 default[:bcpc][:hadoop][:kerberos][:keytab][:recreate] = false
