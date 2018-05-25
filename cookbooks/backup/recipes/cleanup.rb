@@ -50,13 +50,13 @@ def cleanup_service(filter, service, path)
       action :delete
     end
 
-    # remove the hdfs properties file
-    hdfs_file "#{path}/#{name}.properties#delete" do
-      hdfs node[:backup][:namenode]
-      path "#{node[:backup][service][:root]}/#{name}.properties"
-      admin node[:backup][:user]
-      action :delete
-    end
+    # # remove the hdfs properties file
+    # hdfs_file "#{path}/#{name}.properties#delete" do
+    #   hdfs node[:backup][:namenode]
+    #   path "#{node[:backup][service][:root]}/#{name}.properties"
+    #   admin node[:backup][:user]
+    #   action :delete
+    # end
 
     # # kill stale oozie coordinator
     # oozie_job "backup.#{service}.#{name}#kill" do

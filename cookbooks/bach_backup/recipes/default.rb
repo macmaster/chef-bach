@@ -18,6 +18,6 @@ user node[:backup][:user] do
   comment 'backup user'
 end
 
-configure_kerberos 'backup_kerberos' do
-  service_name 'backup'
-end
+# configure_kerberos 'backup_kerberos' do
+#   service_name 'backup'
+# end

@@ -16,7 +16,7 @@
 # limitations under the License.
 
 ## override global backup properties
-force_default[:backup][:user] = "hdfs"
+force_default[:backup][:user] = "backup"
 force_default[:backup][:root] = "/archive"
 force_default[:backup][:local][:root] = "/etc/archive"
 
