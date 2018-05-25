@@ -113,29 +113,6 @@ function snapshotVMs {
   wait && printf "Done Snapshotting\n"
 }
 
-# ################################################################################
-# # Function to enumerate VirtualBox hostonly interfaces
-# # in use from VM's.
-# # Argument: name of an associative array defined in calling context
-# # Post-Condition: Updates associative array provided by name with keys being
-# #                 all interfaces in use and values being the number of VMs on
-# #                 each network
-# function discover_VBOX_hostonly_ifs {
-#   # make used_ifs a typeref to the passed-in associative array
-#   local -n used_ifs=$1
-#   for net in $($VBM list hostonlyifs | grep '^Name:' | sed 's/^Name:[ ]*//'); do
-#     used_ifs[$net]=0
-#   done
-#   for vm in $($VBM list vms | sed -e 's/^[^{]*{//' -e 's/}$//'); do
-#     ifs=$($VBM showvminfo --machinereadable $vm | \
-#       egrep '^hostonlyadapter[0-9]*' | \
-#       sed -e 's/^hostonlyadapter[0-9]*="//' -e 's/"$//')
-#     for interface in $ifs; do
-#       used_ifs[$interface]=$((${used_ifs[$interface]} + 1))
-#     done
-#   done
-# }
-
 ################################################################################
 # Function to remove VirtualBox DHCP servers
 # By default, checks for any DHCP server on networks without VM's & removes them
