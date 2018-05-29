@@ -14,24 +14,22 @@
 :hdfs:
   :hdfs: 'hdfs://Test-Laptop'
   :start: '2018-02-16T12:00Z'
-  :end: '2018-02-26T06:00Z'
+  :end: '2018-06-16T06:00Z'
   :jobs:
     - :path: '/tmp'
       :period: 360
     - :path: '/user'
       :hdfs: 'hdfs://Test-Laptop'
       :period: 480
-    - :path: '/tmp/garbage'
-      :period: 240
 
-:mapred:
+:ubuntu:
   :hdfs: 'hdfs://Test-Laptop'
   :start: '2018-02-16T08:00Z'
-  :end: '2018-03-02T08:00Z'
+  :end: '2018-06-16T08:00Z'
   :jobs:
-    - :path: '/app'
+    - :path: '/user'
       :period: 720
-    - :path: '/var/log'
+    - :path: '/tmp'
       :period: 1440
 
 # :bach:

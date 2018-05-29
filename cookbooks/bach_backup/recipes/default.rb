@@ -15,7 +15,7 @@
 # limitations under the License.
 
 user node[:backup][:user] do
-  comment 'backup user'
+  comment 'backup service user'
 end
 
 group 'hdfs' do
