@@ -35,7 +35,7 @@ node[:backup][:services].each do |service|
       oozie_job "backup.#{service}.#{jobname}" do
         url node[:backup][:oozie]
         config properties_file
-        user group
+        user node[:backup][service][:user]
         action :run
         ignore_failure true
       end
