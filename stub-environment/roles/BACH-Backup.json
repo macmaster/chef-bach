@@ -8,6 +8,8 @@
       "recipe[backup::default]",
       "recipe[backup::bootstrap]",
       "recipe[backup::properties]",
+      "recipe[backup::hdfs]",
+      "recipe[backup::scheduler]",
       "recipe[backup::cleanup]"
     ],
     "default_attributes": {
