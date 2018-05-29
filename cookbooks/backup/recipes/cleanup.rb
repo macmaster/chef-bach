@@ -58,14 +58,14 @@ def cleanup_service(filter, service, path)
       action :delete
     end
 
-    # # kill stale oozie coordinator
-    # oozie_job "backup.#{service}.#{name}#kill" do
-    #   url node[:backup][:oozie]
-    #   name "backup.#{service}.#{name}"
-    #   user node[:backup][:user]
-    #   action :kill
-    #   ignore_failure true
-    # end
+    # kill stale oozie coordinator
+    oozie_job "backup.#{service}.#{name}#kill" do
+      url node[:backup][:oozie]
+      name "backup.#{service}.#{name}"
+      user node[:backup][:user]
+      action :kill
+      ignore_failure true
+    end
   end
 end
 
