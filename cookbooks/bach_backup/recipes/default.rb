@@ -25,5 +25,5 @@ group 'hdfs' do
 end
 
 configure_kerberos 'backup_kerberos' do
-  service_name 'backup'
+  service_name 'bach_backup'
 end
