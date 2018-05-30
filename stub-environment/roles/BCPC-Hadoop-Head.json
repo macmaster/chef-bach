@@ -23,9 +23,10 @@
     "recipe[hdfsdu::create_user]",
     "recipe[bcpc-hadoop::configs]",
     "recipe[pam::default]",
+    "recipe[bcpc-hadoop::bach_backup_wrapper]",
     "recipe[bcpc-hadoop::zookeeper_server]",
     "recipe[bcpc-hadoop::journalnode]",
-    "recipe[bcpc-hadoop::graphite_to_zabbix]"
+    "recipe[bcpc-hadoop::graphite_to_zabbix]",
   ],
   "description": "A highly-available head node in a BCPC Hadoop cluster",
   "chef_type": "role",

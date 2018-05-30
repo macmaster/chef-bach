@@ -22,7 +22,6 @@ hdfs_directory node[:backup][:root] do
   hdfs node[:backup][:namenode]
   source node[:backup][:local][:root]
   path File.dirname("#{node[:backup][:root]}")
-  admin node[:backup][:user]
   action :put
 end
 
