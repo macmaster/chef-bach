@@ -14,15 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Resources here are run at compile time.
+# This is necessary to avoid errors in bcpc-hadoop's resource search.
+
 user node[:backup][:user] do
+  action :nothing
   comment 'backup service user'
-end
+end.run_action(:create)
 
 group 'hdfs' do
-  action :manage
+  action :nothing
   members node[:backup][:user]
   append true
-end
+end.run_action(:manage)
 
 configure_kerberos 'backup_kerberos' do
   service_name 'bach_backup'
