@@ -27,12 +27,16 @@ limitations under the License.
       <job-tracker>${jobtracker}</job-tracker>
       <name-node>${namenode}</name-node>
 
+      <!-- JVM Arguments -->
+      <java-opts>-Dmapred.job.queue.name=${queue}</java-opts>
+
       <!-- preserve metadata -->
       <arg>-ppugbtxc</arg>
       <arg>-update</arg>
+      <arg>-i</arg>
+
       <arg>-bandwidth</arg>
       <arg>${bandwidth}</arg>
-      <arg>-i</arg>
 
       <!-- source and destination -->
       <arg>${wf:conf("hdfs.src.namenode")}/${target}</arg>

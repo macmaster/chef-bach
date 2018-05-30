@@ -33,7 +33,8 @@ def parse_hdfs_properties(group, schedule, job)
     startdate: schedule[:start],
     enddate: schedule[:end],
     timeout: node[:backup][:hdfs][:timeout],
-    bandwidth: node[:backup][:hdfs][:mapper][:bandwidth]
+    bandwidth: node[:backup][:hdfs][:mapper][:bandwidth],
+    queue: node[:backup][:queue]
   }
 end
 

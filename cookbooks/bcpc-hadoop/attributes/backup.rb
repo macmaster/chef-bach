@@ -1,4 +1,5 @@
-# Cookbook Name:: bach_backup_wrapper
+# Cookbook Name:: bcpc-hadoop
+# BCPC Hadoop Attributes for backup jobs
 #
 # Copyright 2018, Bloomberg Finance L.P.
 #
@@ -14,19 +15,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Resources here are run at compile time.
-# This is necessary to avoid errors in bcpc-hadoop's resource search.
-
-user node[:backup][:user] do
-  action :create
-  comment 'backup service user'
-end
-
-group 'hdfs' do
-  members node[:backup][:user]
-  append true
-end
-
-configure_kerberos 'backup_kerberos' do
-  service_name 'bach_backup'
-end
+default[:bcpc][:hadoop][:backup][:user] = "bach_backup"

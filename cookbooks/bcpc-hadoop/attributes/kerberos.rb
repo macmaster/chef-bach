@@ -129,10 +129,10 @@ default['bcpc']['hadoop']['kerberos']['data'] = {
     spnego_keytab: 'spnego.service.keytab'
   },
   bach_backup: {
-    principal: 'bach_backup',
+    principal: node[:bcpc][:hadoop][:backup][:user],
     keytab: 'bach_backup.service.keytab',
-    owner: 'bach_backup',
-    group: 'bach_backup',
+    owner: node[:bcpc][:hadoop][:backup][:user],
+    group: node[:bcpc][:hadoop][:backup][:user],
     princhost: '_HOST',
     perms: '0440',
     spnego_keytab: 'spnego.service.keytab'
