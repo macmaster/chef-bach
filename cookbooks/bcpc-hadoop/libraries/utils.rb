@@ -195,7 +195,7 @@ def set_hosts
     'journal_node' => 'role[BCPC-Hadoop-Head]',
     'resource_manager' => 'role[BCPC-Hadoop-Head-ResourceManager]',
     'job_history_server' =>  'role[BCPC-Hadoop-Head-MapReduce]',
-    'oozie_server' => 'recipe[bcpc-hadoop::oozie]',
+    'oozie_server' => 'role[BCPC-Hadoop-Head-MapReduce]',
     'hadoop_worker' => 'role[BCPC-Hadoop-Worker]',
     'hadoop_datanode' => 'role[BCPC-Hadoop-Worker]', 
     'hadoop_head' => 'role[BCPC-Hadoop-Head]',
@@ -203,61 +203,69 @@ def set_hosts
     'hbase_head' => 'role[BCPC-Hadoop-Head-HBase]'
   }
 
+  srvc2recipe = {
+    'oozie_server' => 'recipe[bcpc-hadoop::oozie]'
+  }
+
   if node.run_state['cluster_def'].nil? then
     node.run_state['cluster_def'] = BACH::ClusterDef.new(node_obj: node)
   end
-  cd = node.run_state['cluster_def']
-  p "cluster_def: #{cd}"
-  p "cluster_def2: #{cd.fetch_cluster_def}"
+  nodes = node.run_state['cluster_def'].fetch_cluster_def
+
+  # host search helper lambdas
+  runs_role = Proc.new { |host, role| host[:runlist].include? srvc2role[role] }
+  runs_recipe = Proc.new { |host, recipe| host[:runlist].include? srvc2recipe[recipe] }
+
+  # mapped host objects
+  to_host = Proc.new do |host| {
+    'hostname' => host[:fqdn]
+  } end
+  to_labeled_host = Proc.new do |host| { 
+    'hostname' => host[:fqdn], 
+    'node_number' => host[:node_id], 
+    'zookeeper_myid' => nil 
+  } end
   
   node.default[:bcpc][:hadoop][:zookeeper][:servers] = 
-    cd.fetch_cluster_def.select { |hst| hst[:runlist].include? srvc2role['zookeeper'] }.map {
-      |hst| { 'hostname' => hst[:fqdn], 'node_number' => hst[:node_id], 'zookeeper_myid' => nil } }
+    nodes.select { |n| runs_role.call(n, 'zookeeper') }.map { |n| to_labeled_host.call(n) }
 
   node.default[:bcpc][:hadoop][:jn_hosts] = 
-    cd.fetch_cluster_def.select { |hst| hst[:runlist].include? srvc2role['journal_node'] }.map {
-      |hst| { 'hostname' => hst[:fqdn]} }
+    nodes.select { |n| runs_role.call(n, 'journal_node') }.map { |n| to_host.call(n) }
 
   node.default[:bcpc][:hadoop][:rm_hosts] = 
-    cd.fetch_cluster_def.select { |hst| hst[:runlist].include? srvc2role['resource_manager'] }.map {
-      |hst| { 'hostname' => hst[:fqdn], 'node_number' => hst[:node_id], 'zookeeper_myid' => nil } }
+    nodes.select { |n| runs_role.call(n, 'resource_manager') }.map { |n| to_labeled_host.call(n) }
 
   node.default[:bcpc][:hadoop][:hs_hosts] = 
-    cd.fetch_cluster_def.select { |hst| hst[:runlist].include? srvc2role['job_history_server'] }.map {
-      |hst| { 'hostname' => hst[:fqdn]} }
+    nodes.select { |n| runs_role.call(n, 'job_history_server') }.map { |n| to_host.call(n) }
 
   node.default[:bcpc][:hadoop][:dn_hosts] = 
-    cd.fetch_cluster_def.select { |hst| hst[:runlist].include? srvc2role['hadoop_worker'] }.map {
-      |hst| { 'hostname' => hst[:fqdn]} }
+    nodes.select { |n| runs_role.call(n, 'hadoop_worker') }.map { |n| to_host.call(n) }
 
   node.default[:bcpc][:hadoop][:hb_hosts] = 
-    cd.fetch_cluster_def.select { |hst| hst[:runlist].include? srvc2role['hbase_head'] }.map {
-      |hst| { 'hostname' => hst[:fqdn]} }
+    nodes.select { |n| runs_role.call(n, 'hbase_head') }.map { |n| to_host.call(n) }
 
   # different flavors of hive
   node.default[:bcpc][:hadoop][:hive_hosts] = 
-      cd.fetch_cluster_def.select { |hst| hst[:runlist].include? srvc2role['hive_server'] }.map {
-      |hst| { 'hostname' => hst[:fqdn]} }
+    nodes.select { |n| runs_role.call(n, 'hive_server') }.map { |n| to_host.call(n) }
 
-  # BCPC-Hadoop-Head-MapReduce
+  # (the BCPC-Hadoop-Head-MapReduce role nests the oozie recipe)
   node.default[:bcpc][:hadoop][:oozie_hosts]  = 
-    cd.fetch_cluster_def.select { |hst| hst[:runlist].include? srvc2role['oozie_server'] }.map {
-      |hst| { 'hostname' => hst[:fqdn]} }
-  
+    nodes.select do |n| 
+      runs_role.call(n, 'oozie_server') || runs_recipe.call(n, 'oozie_server')
+    end.map { |n| to_host.call(n) }
+
   # every datanode
   node.default[:bcpc][:hadoop][:httpfs_hosts] = 
-    cd.fetch_cluster_def.select { |hst| hst[:runlist].include? srvc2role['hadoop_worker']  }.map {
-      |hst| { 'hostname' => hst[:fqdn]} }
+    nodes.select { |n| runs_role.call(n, 'hadoop_worker') }.map { |n| to_host.call(n) }
 
-  # Worker
+  # every worker
   node.default[:bcpc][:hadoop][:rs_hosts] = 
-    cd.fetch_cluster_def.select { |hst| hst[:runlist].include? srvc2role['hadoop_worker']  }.map {
-      |hst| { 'hostname' => hst[:fqdn]} }
+    nodes.select { |n| runs_role.call(n, 'hadoop_worker') }.map { |n| to_host.call(n) }
 
   # BCPC-Hadoop-Head
   node.default[:bcpc][:hadoop][:mysql_hosts] = 
-    cd.fetch_cluster_def.select { |hst| hst[:runlist].include? srvc2role['hadoop_head'] }.map {
-      |hst| { 'hostname' => hst[:fqdn]} }
+    nodes.select { |n| runs_role.call(n, 'hadoop_head') }.map { |n| to_host.call(n) }
+
 end
 
 #
