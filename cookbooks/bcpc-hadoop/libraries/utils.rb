@@ -461,6 +461,7 @@ def get_oozie_url
   oozie_ha_port = node['bcpc']['ha_oozie']['port']
   oozie_urls = node[:bcpc][:hadoop][:oozie_hosts].map do |host|
     p "host: #{host}"
+    p "float host: #{float_host(host['host_name'])}"
     "http://#{float_host(host['host_name'])}:#{oozie_port}"
   end
   oozie_urls.first
