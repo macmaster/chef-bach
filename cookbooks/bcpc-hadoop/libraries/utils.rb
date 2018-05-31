@@ -220,10 +220,10 @@ def set_hosts
   to_host = Proc.new do |host| {
     'hostname' => host[:fqdn]
   } end
-  to_labeled_host = Proc.new do |host| { 
-    'hostname' => host[:fqdn], 
-    'node_number' => host[:node_id], 
-    'zookeeper_myid' => nil 
+  to_labeled_host = Proc.new do |host| {
+    'hostname' => host[:fqdn],
+    'node_number' => host[:node_id],
+    'zookeeper_myid' => nil
   } end
   
   node.default[:bcpc][:hadoop][:zookeeper][:servers] = 
