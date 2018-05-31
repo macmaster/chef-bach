@@ -464,13 +464,11 @@ def get_oozie_url
     "http://#{float_host(host['host_name'])}:#{oozie_port}"
   end
   oozie_urls.first
-end
-
-if oozie_hosts.length >= 2
-  oozie_url = \
-    "http://#{float_host(node['bcpc']['management']['viphost'])}:" \
-    "#{oozie_ha_port}"
-end
+  # if oozie_hosts.length >= 2
+  #   oozie_url = \
+  #     "http://#{float_host(node['bcpc']['management']['viphost'])}:" \
+  #     "#{oozie_ha_port}"
+  # end
 end
 
 # Internal: Have the specified Oozie host update its ShareLib 
