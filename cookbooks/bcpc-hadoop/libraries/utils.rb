@@ -196,7 +196,7 @@ def set_hosts
     'journal_node' => 'role[BCPC-Hadoop-Head]',
     'resource_manager' => 'role[BCPC-Hadoop-Head-ResourceManager]',
     'job_history_server' =>  'role[BCPC-Hadoop-Head-MapReduce]',
-    'oozie_server' => 'role[BCPC-Hadoop-Head-MapReduce]',
+    'oozie_server' => 'recipe[bcpc-hadoop::oozie]',
     'hadoop_worker' => 'role[BCPC-Hadoop-Worker]',
     'hadoop_datanode' => 'role[BCPC-Hadoop-Worker]', 
     'hadoop_head' => 'role[BCPC-Hadoop-Head]',
