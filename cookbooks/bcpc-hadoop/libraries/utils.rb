@@ -207,6 +207,8 @@ def set_hosts
     node.run_state['cluster_def'] = BACH::ClusterDef.new(node_obj: node)
   end
   cd = node.run_state['cluster_def']
+  p "cluster_def: #{cd}"
+  p "cluster_def2: #{cd.fetch_cluster_def}"
   
   node.default[:bcpc][:hadoop][:zookeeper][:servers] = 
     cd.fetch_cluster_def.select { |hst| hst[:runlist].include? srvc2role['zookeeper'] }.map {
