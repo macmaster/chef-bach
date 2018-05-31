@@ -156,7 +156,6 @@ def secure_password(len = 20)
 end
 
 def float_host(*args)
-  p args
   return ('f-' + args.join('.')) if node['bcpc']['management']['ip'] != node['bcpc']['floating']['ip']
   args.join('.')
 end
@@ -459,6 +458,7 @@ end
 # If there are at least two oozie hosts, the oozie HA will be enabled.
 def get_oozie_url
   oozie_hosts = node['bcpc']['hadoop']['oozie_hosts']
+  p "oozie_hosts: #{oozie_hosts}"
   if oozie_hosts.length > 1
     # high-availability enabled
     port = node['bcpc']['ha_oozie']['port']
