@@ -227,44 +227,44 @@ def set_hosts
   } end
   
   node.default[:bcpc][:hadoop][:zookeeper][:servers] = 
-    p nodes.select { |n| runs_role.call(n, 'zookeeper') }.map { |n| to_labeled_host.call(n) }
+    nodes.select { |n| runs_role.call(n, 'zookeeper') }.map { |n| to_labeled_host.call(n) }
 
   node.default[:bcpc][:hadoop][:jn_hosts] = 
-    p nodes.select { |n| runs_role.call(n, 'journal_node') }.map { |n| to_host.call(n) }
+    nodes.select { |n| runs_role.call(n, 'journal_node') }.map { |n| to_host.call(n) }
 
   node.default[:bcpc][:hadoop][:rm_hosts] = 
-    p nodes.select { |n| runs_role.call(n, 'resource_manager') }.map { |n| to_labeled_host.call(n) }
+    nodes.select { |n| runs_role.call(n, 'resource_manager') }.map { |n| to_labeled_host.call(n) }
 
   node.default[:bcpc][:hadoop][:hs_hosts] = 
-    p nodes.select { |n| runs_role.call(n, 'job_history_server') }.map { |n| to_host.call(n) }
+    nodes.select { |n| runs_role.call(n, 'job_history_server') }.map { |n| to_host.call(n) }
 
   node.default[:bcpc][:hadoop][:dn_hosts] = 
-    p nodes.select { |n| runs_role.call(n, 'hadoop_worker') }.map { |n| to_host.call(n) }
+    nodes.select { |n| runs_role.call(n, 'hadoop_worker') }.map { |n| to_host.call(n) }
 
   node.default[:bcpc][:hadoop][:hb_hosts] = 
-    p nodes.select { |n| runs_role.call(n, 'hbase_head') }.map { |n| to_host.call(n) }
+    nodes.select { |n| runs_role.call(n, 'hbase_head') }.map { |n| to_host.call(n) }
 
   # different flavors of hive
   node.default[:bcpc][:hadoop][:hive_hosts] = 
-    p nodes.select { |n| runs_role.call(n, 'hive_server') }.map { |n| to_host.call(n) }
+    nodes.select { |n| runs_role.call(n, 'hive_server') }.map { |n| to_host.call(n) }
 
   # (the BCPC-Hadoop-Head-MapReduce role nests the oozie recipe)
   node.default[:bcpc][:hadoop][:oozie_hosts]  = 
-    p nodes.select do |n| 
+    nodes.select do |n| 
       runs_role.call(n, 'oozie_server') || runs_recipe.call(n, 'oozie_server')
     end.map { |n| to_host.call(n) }
 
   # every datanode
   node.default[:bcpc][:hadoop][:httpfs_hosts] = 
-    p nodes.select { |n| runs_role.call(n, 'hadoop_worker') }.map { |n| to_host.call(n) }
+    nodes.select { |n| runs_role.call(n, 'hadoop_worker') }.map { |n| to_host.call(n) }
 
   # every worker
   node.default[:bcpc][:hadoop][:rs_hosts] = 
-    p nodes.select { |n| runs_role.call(n, 'hadoop_worker') }.map { |n| to_host.call(n) }
+    nodes.select { |n| runs_role.call(n, 'hadoop_worker') }.map { |n| to_host.call(n) }
 
   # BCPC-Hadoop-Head
   node.default[:bcpc][:hadoop][:mysql_hosts] = 
-    p nodes.select { |n| runs_role.call(n, 'hadoop_head') }.map { |n| to_host.call(n) }
+    nodes.select { |n| runs_role.call(n, 'hadoop_head') }.map { |n| to_host.call(n) }
 
 end
 
