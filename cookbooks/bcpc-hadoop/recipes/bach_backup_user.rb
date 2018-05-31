@@ -16,7 +16,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-user node[:bcpc][:hadoop][:backup][:user] do
+backup_user = node[:bcpc][:hadoop][:backup][:user]
+
+user backup_user do
   action :create
   comment 'backup service user'
+end
+
+# make backup user an hdfs superuser
+group 'hdfs' do
+  members backup_user
+  append true
+end
+
+configure_kerberos 'backup_kerberos' do
+  service_name 'backup'
 end

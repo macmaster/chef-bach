@@ -454,6 +454,12 @@ def oozie_running?(host)
   cmd.exitstatus == 0 && cmd.stdout.include?('NORMAL')
 end
 
+# Determines the http url to use for oozie.
+# If there are at least two oozie hosts, the oozie HA will be enabled.
+def get_oozie_url
+  "I'm an oozie url"
+end
+
 # Internal: Have the specified Oozie host update its ShareLib 
 #           to the latest lib_<timestamp>
 #           sharelib directory on hdfs:/user/oozie/share/lib/,

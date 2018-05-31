@@ -17,16 +17,15 @@
 # Resources here are run at compile time.
 # This is necessary to avoid errors in bcpc-hadoop's resource search.
 
-user node[:backup][:user] do
-  action :create
-  comment 'backup service user'
+backup_user = node[:backup][:user]
+
+# create hdfs home
+execute 'hdfs home for backup service' do
+  command "hdfs dfs -mkdir -p /user/#{backup_user}"
+  user 'hdfs'
 end
 
-group 'hdfs' do
-  members node[:backup][:user]
-  append true
-end
-
-configure_kerberos 'backup_kerberos' do
-  service_name 'bach_backup'
+execute 'chown hdfs home for backup service' do
+  command "hdfs dfs -chown #{backup_user} /user/#{backup_user}"
+  user 'hdfs'
 end
