@@ -156,6 +156,7 @@ def secure_password(len = 20)
 end
 
 def float_host(*args)
+  p args
   return ('f-' + args.join('.')) if node['bcpc']['management']['ip'] != node['bcpc']['floating']['ip']
   args.join('.')
 end
@@ -457,19 +458,20 @@ end
 # Determines the http url to use for oozie.
 # If there are at least two oozie hosts, the oozie HA will be enabled.
 def get_oozie_url
-  oozie_port = node['bcpc']['hadoop']['oozie_port']
-  oozie_ha_port = node['bcpc']['ha_oozie']['port']
-  oozie_urls = node[:bcpc][:hadoop][:oozie_hosts].map do |host|
-    p "host: #{host}"
-    p "float host: #{float_host(host['host_name'])}"
-    "http://#{float_host(host['host_name'])}:#{oozie_port}"
+  oozie_hosts = node['bcpc']['hadoop']['oozie_hosts']
+  if oozie_hosts.length > 1
+    # high-availability enabled
+    port = node['bcpc']['ha_oozie']['port']
+    host = float_host(node['bcpc']['management']['viphost'])
+    "http://#{host}:#{port}/oozie"
+  elsif oozie_hosts.length == 1
+    # single oozie host
+    port = node['bcpc']['hadoop']['oozie_port']
+    host = float_host(oozie_hosts.first['hostname'])
+    "http://#{host}:#{port}/oozie"
+  else
+    return nil
   end
-  oozie_urls.first
-  # if oozie_hosts.length >= 2
-  #   oozie_url = \
-  #     "http://#{float_host(node['bcpc']['management']['viphost'])}:" \
-  #     "#{oozie_ha_port}"
-  # end
 end
 
 # Internal: Have the specified Oozie host update its ShareLib 
