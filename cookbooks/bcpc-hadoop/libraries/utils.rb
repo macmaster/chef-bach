@@ -266,6 +266,31 @@ def set_hosts
   node.default[:bcpc][:hadoop][:mysql_hosts] = 
     nodes.select { |n| runs_role.call(n, 'hadoop_head') }.map { |n| to_host.call(n) }
 
+  # set the oozie_url
+  oozie_hosts = node[:bcpc][:hadoop][:oozie_hosts]
+  if oozie_hosts.length > 1
+    # high-availability
+    node.default[:bcpc][:hadoop][:oozie_url] = 
+      "http://#{node[:bcpc][:mangement][:viphost]}:" +
+        "#{node[:bcpc][:ha_oozie][:port]}/oozie"
+  elsif oozie_hosts.length == 1
+    # single oozie host
+    node.default[:bcpc][:hadoop][:oozie_url] = 
+      "http://#{float_host(oozie_hosts.first[:hostname])}:" +
+        "#{node[:bcpc][:hadoop][:oozie_port]}/oozie"
+  end
+
+  # set the resourcemanager_url (rm_address)
+  rm_hosts = node[:bcpc][:hadoop][:rm_hosts]
+  if rm_hosts.length > 1
+    # high-availability
+    node.default[:bcpc][:hadoop][:rm_address] = node.chef_environment
+  else
+    node.default[:bcpc][:hadoop][:rm_address] = 
+      "http://#{float_host(rm_hosts.first[:hostname])}:" +
+        "#{node[:bcpc][:hadoop][:yarn][:resourcemanager][:port]}"
+  end
+
 end
 
 #
@@ -462,26 +487,6 @@ def oozie_running?(host)
   ).run_command
   Chef::Log.debug("Oozie status: #{cmd.stdout}")
   cmd.exitstatus == 0 && cmd.stdout.include?('NORMAL')
-end
-
-# Determines the http url to use for oozie.
-# If there are at least two oozie hosts, the oozie HA will be enabled.
-def get_oozie_url
-  oozie_hosts = node['bcpc']['hadoop']['oozie_hosts']
-  p "oozie_hosts: #{oozie_hosts}"
-  if oozie_hosts.length > 1
-    # high-availability enabled
-    port = node['bcpc']['ha_oozie']['port']
-    host = float_host(node['bcpc']['management']['viphost'])
-    "http://#{host}:#{port}/oozie"
-  elsif oozie_hosts.length == 1
-    # single oozie host
-    port = node['bcpc']['hadoop']['oozie_port']
-    host = float_host(oozie_hosts.first['hostname'])
-    "http://#{host}:#{port}/oozie"
-  else
-    return nil
-  end
 end
 
 # Internal: Have the specified Oozie host update its ShareLib 

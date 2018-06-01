@@ -23,12 +23,12 @@ force_default[:backup][:local][:root] = "/etc/archive"
 
 # storage cluster
 set_hosts # set bcpc hadoop hosts
-force_default[:backup][:namenode] = "hdfs://#{node.chef_environment}"
-force_default[:backup][:jobtracker] = "f-bcpc-vm2.bcpc.example.com:8032" # node[:bcpc]...
-
-force_default[:backup][:oozie] = "http://f-bcpc-vm1.bcpc.example.com:11000/oozie"
-
-puts "oozie url: #{get_oozie_url}"
+force_default[:backup][:namenode] = 
+  node[:bcpc][:hadoop][:hdfs_url] || "hdfs://#{node.chef_environment}"
+force_default[:backup][:jobtracker] = 
+  node[:bcpc][:hadoop][:rm_address] || "f-bcpc-vm2.bcpc.example.com:8032"
+force_default[:backup][:oozie] = 
+  node[:bcpc][:hadoop][:oozie_url] || "http://f-bcpc-vm1.bcpc.example.com:11000/oozie"
 
 # Mapreduce Queue
 force_default[:backup][:queue] = "root.default.#{node[:backup][:user]}"
