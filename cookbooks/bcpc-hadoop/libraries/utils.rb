@@ -271,7 +271,7 @@ def set_hosts
   if oozie_hosts.length > 1
     # high-availability
     node.default[:bcpc][:hadoop][:oozie_url] = 
-      "http://#{node[:bcpc][:management][:viphost]}:" +
+      "http://#{float_host(node[:bcpc][:management][:viphost])}:" +
         "#{node[:bcpc][:ha_oozie][:port]}/oozie"
   elsif oozie_hosts.length == 1
     # single oozie host
