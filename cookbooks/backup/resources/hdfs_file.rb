@@ -1,4 +1,3 @@
-#
 # Cookbook Name:: backup
 # Custom hdfs file resource
 #
@@ -15,7 +14,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
 resource_name :hdfs_file
 

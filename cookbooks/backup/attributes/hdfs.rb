@@ -32,9 +32,9 @@ default[:backup][:hdfs][:timeout] = -1
 default[:backup][:hdfs][:mapper][:bandwidth] = 25
 
 ### hdfs backup requests
-## NOTE: refer to files/default/hdfs/jobs.yaml for the proper data scheme.
 default[:backup][:hdfs][:schedules] = {}
 
+## NOTE: refer to files/default/hdfs/jobs.yml for the proper data scheme.
 # default[:backup][:hdfs][:schedules] = YAML.load_file(File.join(
 #   Chef::Config[:file_cache_path],
 #   'cookbooks',

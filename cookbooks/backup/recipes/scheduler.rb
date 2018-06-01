@@ -1,4 +1,3 @@
-#
 # Cookbook Name:: backup
 # Recipe:: scheduler
 # Launches the oozie coordinators to schedule periodic backups
@@ -16,7 +15,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
 # Run each oozie coordinator tracked by the backup service.
 # Only runs the coordinator if it is not already RUNNING

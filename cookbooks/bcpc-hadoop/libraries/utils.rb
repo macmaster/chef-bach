@@ -250,7 +250,7 @@ def set_hosts
 
   # (the BCPC-Hadoop-Head-MapReduce role nests the oozie recipe)
   node.default[:bcpc][:hadoop][:oozie_hosts]  = 
-    nodes.select do |n| 
+    nodes.select do |n|
       runs_role.call(n, 'oozie_server') || runs_recipe.call(n, 'oozie_server')
     end.map { |n| to_host.call(n) }
 
@@ -270,12 +270,12 @@ def set_hosts
   oozie_hosts = node[:bcpc][:hadoop][:oozie_hosts]
   if oozie_hosts.length > 1
     # high-availability
-    node.default[:bcpc][:hadoop][:oozie_url] = 
+    node.default[:bcpc][:hadoop][:oozie_url] =
       "http://#{float_host(node[:bcpc][:management][:viphost])}:" +
         "#{node[:bcpc][:ha_oozie][:port]}/oozie"
   elsif oozie_hosts.length == 1
     # single oozie host
-    node.default[:bcpc][:hadoop][:oozie_url] = 
+    node.default[:bcpc][:hadoop][:oozie_url] =
       "http://#{float_host(oozie_hosts.first[:hostname])}:" +
         "#{node[:bcpc][:hadoop][:oozie_port]}/oozie"
   end
@@ -286,7 +286,7 @@ def set_hosts
     # high-availability
     node.default[:bcpc][:hadoop][:rm_address] = node.chef_environment
   else
-    node.default[:bcpc][:hadoop][:rm_address] = 
+    node.default[:bcpc][:hadoop][:rm_address] =
       "http://#{float_host(rm_hosts.first[:hostname])}:" +
         "#{node[:bcpc][:hadoop][:yarn][:resourcemanager][:port]}"
   end

@@ -23,19 +23,15 @@ force_default[:backup][:local][:root] = "/etc/archive"
 
 # storage cluster
 set_hosts # set bcpc hadoop hosts
-p force_default[:backup][:namenode] = 
-  node[:bcpc][:hadoop][:hdfs_url] || "hdfs://#{node.chef_environment}"
-p force_default[:backup][:jobtracker] = 
-  node[:bcpc][:hadoop][:rm_address] || "f-bcpc-vm2.bcpc.example.com:8032"
-p force_default[:backup][:oozie] = 
-  node[:bcpc][:hadoop][:oozie_url] || "http://f-bcpc-vm1.bcpc.example.com:11000/oozie"
+p force_default[:backup][:namenode] = node[:bcpc][:hadoop][:hdfs_url]
+p force_default[:backup][:jobtracker] = node[:bcpc][:hadoop][:rm_address]
+p force_default[:backup][:oozie] = node[:bcpc][:hadoop][:oozie_url]
 
 # Mapreduce Queue
 force_default[:backup][:queue] = "root.default.#{node[:backup][:user]}"
 
 # hdfs backup jobs list
 ## NOTE: refer to file/default/hdfs_jobs.yml for proper data scheme.
-## TODO: eventually, refactor the cookbook to source these properties from a relational db (mysql)
 ## force_default[:backup][:hdfs][:schedules] = YAML.load_file(File.join(
 ##   Chef::Config[:file_cache_path],
 ##   'cookbooks',
@@ -63,15 +59,4 @@ force_default[:backup][:hdfs][:schedules] = {
       { path: '/user', period: 720, },
     ]
   },
-  # bach: {
-  #   hdfs: 'hdfs://Test-Laptop',
-  #   start: '2018-02-16T12:00Z',
-  #   end: '2018-06-16T06:00Z',
-  #   period: 120,
-  #   jobs: [
-  #     { path: '/tmp', },
-  #     { path: '/user', },
-  #   ]
-  # },
 }
-

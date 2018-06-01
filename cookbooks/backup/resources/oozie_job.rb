@@ -1,4 +1,3 @@
-#
 # Cookbook Name:: backup
 # Custom oozie job resource
 #
@@ -15,7 +14,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
 resource_name :oozie_job
 provides :oozie_job

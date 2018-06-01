@@ -32,11 +32,3 @@
     - :path: '/tmp'
       :period: 1440
 
-# :bach:
-#   :hdfs: 'hdfs://Test-Laptop'
-#   :start: '2018-02-16T08:00Z'
-#   :end: '2018-03-02T08:00Z'
-#   :period: 120
-#   :jobs:
-#     - :path: '/app'
-#     - :path: '/var/log'
