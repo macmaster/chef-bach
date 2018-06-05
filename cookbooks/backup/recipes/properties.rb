@@ -22,6 +22,10 @@ def parse_hdfs_properties(group, schedule, job)
   name = job[:name] || File.basename(job[:path])
   hdfs_src = job[:hdfs] || schedule[:hdfs]
   period = job[:period] || schedule[:period]
+  bandwidth = node[:backup][:hdfs][:mapper][:bandwidth] ||
+    node[:backup][:mapper][:bandwidth]
+  queue = node[:backup][:hdfs][:queue] ||
+    node[:backup][:queue]
 
   return {
     group: group,
@@ -33,8 +37,8 @@ def parse_hdfs_properties(group, schedule, job)
     startdate: schedule[:start],
     enddate: schedule[:end],
     timeout: node[:backup][:hdfs][:timeout],
-    bandwidth: node[:backup][:hdfs][:mapper][:bandwidth],
-    queue: node[:backup][:queue]
+    bandwidth: bandwidth,
+    queue: queue
   }
 end
 
