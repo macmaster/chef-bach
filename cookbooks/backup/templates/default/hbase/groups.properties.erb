@@ -1,5 +1,7 @@
+#
 # Cookbook Name:: backup
-# Default Attributes
+# groups.properties
+# Properties file for an oozie backup job
 #
 # Copyright 2018, Bloomberg Finance L.P.
 #
@@ -14,19 +16,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-## global backup properties
-default[:backup][:user] = "backup"
-default[:backup][:root] = "/backup"
-default[:backup][:local][:root] = "/etc/backup"
-
-# list of enabled backup services
-default[:backup][:services] = [:hdfs, :hbase]
+#
 
 # storage cluster
-default[:backup][:namenode] = "hdfs://localhost:9000"
-default[:backup][:jobtracker] = "localhost:8032"
-default[:backup][:oozie] = "http://localhost:11000/oozie"
+hdfs.dest.namenode=<%= node[:backup][:namenode] %>
+hdfs.backup.root=${hdfs.dest.namenode}/<%= node[:backup][:hdfs][:root].sub("/", "") %>
 
-# YARN tuning parameters
-default[:backup][:queue] = "default"
+# oozie properties
+oozie.use.system.libpath=true
+oozie.wf.application.path=${hdfs.backup.root}/oozie/groups.xml
+
+# hadoop properties
+namenode=<%= node[:backup][:namenode] %>
+jobtracker=<%= node[:backup][:jobtracker] %>
